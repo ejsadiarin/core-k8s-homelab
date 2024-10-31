@@ -6,7 +6,7 @@ services:
       - "traefik.http.routers.nginx.rule=Host(`nginx.local.ejsadiarin.com`)"
       - "traefik.http.routers.nginx.entrypoints=https"
       - "traefik.http.routers.nginx.tls=true"
-      - "traefik.http.routers.nginx.middlewares=traefik-auth"
+      - "traefik.http.routers.nginx.middlewares=authentik@file"
       - "traefik.http.services.nginx.loadbalancer.server.port=8080"
     networks:
       - proxy
