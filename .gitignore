@@ -2,3 +2,5 @@
 */**/.env
 master_env.md
 */**/acme.json
+immich/library
+immich/postgres

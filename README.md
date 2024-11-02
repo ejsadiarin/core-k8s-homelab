@@ -12,3 +12,15 @@
 ```bash
 touch services/traefik/data/acme.json
 ```
+## Authentik
+
+*note that: run `sudo sysctl vm.overcommit_memory=1` for redis*
+
+## Immich
+
+*note that: run `sudo sysctl vm.overcommit_memory=1` for redis*
+
+- [x] read: from server to clients
+- [ ] write: 
+
+ 

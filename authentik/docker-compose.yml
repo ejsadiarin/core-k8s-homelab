@@ -1,6 +1,6 @@
 ---
 services:
-  postgresql:
+  authentik-postgresql:
     image: docker.io/library/postgres:16-alpine
     container_name: authentik-postgres
     restart: unless-stopped
@@ -18,7 +18,8 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
     networks:
       - proxy
-  redis:
+
+  authentik-redis:
     image: docker.io/library/redis:alpine
     container_name: authentik-redis
     command: --save 60 1 --loglevel warning
@@ -33,14 +34,15 @@ services:
       - redis:/data
     networks:
       - proxy
+
   server:
     image: ghcr.io/goauthentik/server:2024.8.3
     container_name: authentik-server
     restart: unless-stopped
     command: server
     environment:
-      - AUTHENTIK_REDIS__HOST=redis
-      - AUTHENTIK_POSTGRESQL__HOST=postgresql
+      - AUTHENTIK_REDIS__HOST=authentik-redis
+      - AUTHENTIK_POSTGRESQL__HOST=authentik-postgresql
       - AUTHENTIK_POSTGRESQL__USER=${POSTGRES_USER}
       - AUTHENTIK_POSTGRESQL__NAME=${POSTGRES_DB}
       - AUTHENTIK_POSTGRESQL__PASSWORD=${POSTGRES_PASSWORD}
@@ -58,18 +60,19 @@ services:
       - "traefik.http.routers.authentik.service=authentik-svc"
       - "traefik.http.services.authentik-svc.loadbalancer.server.port=9000"
     depends_on:
-      - postgresql
-      - redis
+      - authentik-postgresql
+      - authentik-redis
     networks:
       - proxy
+
   worker:
     image: ghcr.io/goauthentik/server:2024.8.3
     container_name: authentik-worker
     restart: unless-stopped
     command: worker
     environment:
-      - AUTHENTIK_REDIS__HOST=redis
-      - AUTHENTIK_POSTGRESQL__HOST=postgresql
+      - AUTHENTIK_REDIS__HOST=authentik-redis
+      - AUTHENTIK_POSTGRESQL__HOST=authentik-postgresql
       - AUTHENTIK_POSTGRESQL__USER=${POSTGRES_USER}
       - AUTHENTIK_POSTGRESQL__NAME=${POSTGRES_DB}
       - AUTHENTIK_POSTGRESQL__PASSWORD=${POSTGRES_PASSWORD}
@@ -83,8 +86,8 @@ services:
     networks:
       - proxy
     depends_on:
-      - postgresql
-      - redis
+      - authentik-postgresql
+      - authentik-redis
 
 volumes:
   database:
