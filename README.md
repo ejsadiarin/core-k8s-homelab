@@ -19,7 +19,18 @@ NOTE: database backups should be `dump`ed, not copied (e.g. `pg_dump` for postgr
 - bind: `./custom-templates`
 - bind: `./certs`
 - volume: `database` (`/var/lib/docker/volumes/authentik_database/_data`)
+```bash
+# In general:
+docker exec -i <postgres-container> /usr/local/bin/pg_dump --username <postgres-user> <postgres-database> > <target-dump-file>
+
+# concrete:
+docker exec -i authentik-postgresql-1 /usr/local/bin/pg_dump --username authentik authentik > ~/services/authentik/postgres-backup.sql
+
+# THEN: after dump then create backup of ~/services/authentik (includes db, media, and other things)
+```
 - volume: `redis` (`/var/lib/docker/volumes/authentik_redis/_data`)
+    - NOTE: no need to backup redis volume
+
 
 * Immich - read [backup and restore docs](https://immich.app/docs/administration/backup-and-restore/#filesystem)
 - bind: `./library/library`
@@ -27,12 +38,25 @@ NOTE: database backups should be `dump`ed, not copied (e.g. `pg_dump` for postgr
 - bind: `./library/profile`
 - bind: `./library/backups` (for the database) - immich does auto backups for db
 - volume: `model-cache` (`/var/lib/docker/volumes/immich_model-cache/_data`)
+    - NOTE: no need to backup model-cache volume
 
 * Gitea - read [backup and restore docs](https://docs.gitea.com/next/administration/backup-and-restore)
+- bind: `./gitea`
+- bind: `./postgres` ?? (pg_dump this)
 - database:
 ```bash
-su git
-./gitea dump -c ~/
+docker exec --user git -it gitea /bin/bash
+gitea dump -c /data/gitea/conf/app.ini
+cd /data/git
+# backup the .zip file
+<backup-script-command> $(find /data/git -type f -name "*.zip")
+# or find newest zip: find /path/to/search -type f -name "*.zip" -R -printf '%T+ %p\n' | sort -r | head -n 1
+# copy zip backup to host
+docker cp gitea:/data/git/*.zip ~/services/gitea/
+```
+- one-liner:
+```bash
+docker 
 ```
 
 * Ntfy
