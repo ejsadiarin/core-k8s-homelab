@@ -8,3 +8,4 @@ gotify/data
 portainer/data
 uptime_kuma/data
 gitea/gitea
+gitea/postgres
