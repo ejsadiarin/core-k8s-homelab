@@ -5,6 +5,43 @@
 > [!IMPORTANT]
 > **make sure that backups include the docker volumes for ALL services**
 
+# Backing Up
+
+NOTE: database backups should be `dump`ed, not copied (e.g. `pg_dump` for postgresql)
+- see instructions below for specifics
+
+*  Traefik
+- bind: `./data` 
+- volume: `traefik-certs` (`/var/lib/docker/volumes/traefik-certs/_data`) 
+
+* Authentik
+- bind: `./media`
+- bind: `./custom-templates`
+- bind: `./certs`
+- volume: `database` (`/var/lib/docker/volumes/authentik_database/_data`)
+- volume: `redis` (`/var/lib/docker/volumes/authentik_redis/_data`)
+
+* Immich - read [backup and restore docs](https://immich.app/docs/administration/backup-and-restore/#filesystem)
+- bind: `./library/library`
+- bind: `./library/upload`
+- bind: `./library/profile`
+- bind: `./library/backups` (for the database) - immich does auto backups for db
+- volume: `model-cache` (`/var/lib/docker/volumes/immich_model-cache/_data`)
+
+* Gitea - read [backup and restore docs](https://docs.gitea.com/next/administration/backup-and-restore)
+- database:
+```bash
+su git
+./gitea dump -c ~/
+```
+
+* Ntfy
+- bind: `./cache`
+- bind: `./etc`
+
+* Portainer
+- 
+
 ## Traefik
 
 - make sure to add a certificate file `acme.json` on `services/traefik/data/`
