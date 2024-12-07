@@ -40,7 +40,10 @@ su git
 - bind: `./etc`
 
 * Portainer
-- 
+- bind: `./data`
+
+* Uptime Kuma
+- bind: `./data`
 
 ## Traefik
 
