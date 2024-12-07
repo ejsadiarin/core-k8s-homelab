@@ -1,6 +1,7 @@
 services:
   nginx:
     image: nginxdemos/nginx-hello
+    container_name: nginx-test
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.nginx.rule=Host(`nginx.local.ejsadiarin.com`)"

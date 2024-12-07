@@ -5,3 +5,6 @@ master_env.md
 immich/library
 immich/postgres
 gotify/data
+portainer/data
+uptime_kuma/data
+gitea/gitea

@@ -8,7 +8,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - portainer_data:/data
+      - ./data:/data
     networks:
         - proxy
     labels:
@@ -22,9 +22,6 @@ services:
       - "traefik.http.routers.portainer-secure.tls=true"
       - "traefik.http.routers.portainer-secure.service=portainer"
       - "traefik.http.services.portainer.loadbalancer.server.port=9000"
-
-volumes:
-  portainer_data:
 
 networks:
   proxy:
