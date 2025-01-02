@@ -24,7 +24,7 @@ NOTE: database backups should be `dump`ed, not copied (e.g. `pg_dump` for postgr
 docker exec -i <postgres-container> /usr/local/bin/pg_dump --username <postgres-user> <postgres-database> > <target-dump-file>
 
 # concrete:
-docker exec -i authentik-postgresql-1 /usr/local/bin/pg_dump --username authentik authentik > ~/services/authentik/postgres-backup.sql
+docker exec -i authentik-postgres /usr/local/bin/pg_dump --username authentik-pg-admin authentik-pg-db > ~/backups/authentik/postgres-backup.sql
 
 # THEN: after dump then create backup of ~/services/authentik (includes db, media, and other things)
 ```
@@ -43,7 +43,7 @@ docker exec -i authentik-postgresql-1 /usr/local/bin/pg_dump --username authenti
 * Gitea - read [backup and restore docs](https://docs.gitea.com/next/administration/backup-and-restore)
 - bind: `./gitea`
 - bind: `./postgres` ?? (pg_dump this)
-- database:
+- all:
 ```bash
 docker exec --user git -it gitea /bin/bash
 gitea dump -c /data/gitea/conf/app.ini
@@ -56,7 +56,11 @@ docker cp gitea:/data/git/*.zip ~/services/gitea/
 ```
 - one-liner:
 ```bash
-docker 
+docker exec --user git -it gitea /bin/bash
+# inside the docker shell:
+gitea dump -c /data/gitea/conf/app.ini
+find /data/git -type f -name "*.zip" -R -printf '%T+ %p\n' | sort -r | head -n 1
+docker cp gitea:/data/git/*.zip ~/services/gitea/
 ```
 
 * Ntfy

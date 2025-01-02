@@ -1,0 +1,22 @@
+services:
+  glance:
+    image: glanceapp/glance
+    container_name: glance
+    volumes:
+      - ./glance.yml:/app/glance.yml
+      # - ./assets:/app/assets
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.glance.rule=Host(`glance.local.ejsadiarin.com`)"
+      - "traefik.http.routers.glance.entrypoints=https"
+      - "traefik.http.routers.glance.tls=true"
+      - "traefik.http.services.glance.loadbalancer.server.port=8080"
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true

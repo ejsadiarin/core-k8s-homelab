@@ -9,3 +9,6 @@ portainer/data
 uptime_kuma/data
 gitea/gitea
 gitea/postgres
+restic/
+homeassistant/config
+vaultwarden/data

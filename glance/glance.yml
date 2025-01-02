@@ -1,0 +1,167 @@
+# server:
+#   assets-path: /app/assets
+
+theme:
+  background-color: 50 1 6
+  primary-color: 24 97 58
+  negative-color: 209 88 54
+
+pages:
+  - name: Home
+    columns:
+      - size: small
+        widgets:
+          - type: calendar
+
+          - type: twitch-channels
+            channels:
+              - theprimeagen
+              - necros
+              - timthetatman
+              - mooda
+              - themainmanswe
+              - piratesoftware
+              - loltyler1
+              - tsoding
+              - teej_dv
+              - melkey
+              - bogur
+              - razziebinx
+
+          - type: lobsters
+            sort-by: hot
+            tags:
+              - go
+              - linux
+              - compsci
+              - security
+              - programming
+            limit: 15
+            collapse-after: 5
+
+      - size: full
+        widgets:
+          - type: monitor
+            cache: 1m
+            title: Services
+            sites:
+              - title: Immich
+                url: https://immich.local.ejsadiarin.com
+                icon: si:immich
+              - title: Gitea
+                url: https://git.local.ejsadiarin.com
+                icon: si:gitea
+              - title: Portainer
+                url: https://portainer.local.ejsadiarin.com
+                icon: si:portainer
+              - title: Ntfy
+                url: https://ntfy.local.ejsadiarin.com
+                icon: si:ntfy
+              - title: Uptime Kuma
+                url: https://uptime-kuma.local.ejsadiarin.com
+                icon: si:uptimekuma
+              - title: Authentik
+                url: https://auth.local.ejsadiarin.com
+                icon: si:authentik
+              # - title: AdGuard Home
+              #   url: https://adguard.ejsadiarin.com
+              #   icon: /assets/adguard-logo.png
+              # - title: Vaultwarden
+              #   url: https://vault.ejsadiarin.com
+              #   icon: /assets/vaultwarden-logo.png
+          - type: group
+            widgets:
+              - type: videos
+                title: Core Dumped
+                limit: 7
+                style: grid-cards
+                channels:
+                  - UCGKEMK3s-ZPbjVOIuAV8clQ # Core Dumped
+              - type: videos
+                title: Muse Asia
+                limit: 20
+                style: horizontal-cards
+                channels:
+                  - UCGbshtvS9t-8CW11W7TooQg # Muse Asia
+              - type: videos
+                title: ThePrimeTime
+                limit: 7
+                style: grid-cards
+                channels:
+                  - UCUyeluBRhGPCW4rPe_UvBZQ # ThePrimeTime
+              - type: videos
+                title: Fireship
+                limit: 7
+                style: grid-cards
+                channels:
+                  - UCsBjURrPoezykLs9EqgamOA # Fireship
+              - type: videos
+                title: Nephis
+                limit: 7
+                style: grid-cards
+                channels:
+                  - UCdhPlZcpEqlVFIRuk4W5u8g # Nephis
+
+          # - type: videos
+          #   limit: 25
+          #   style: horizontal-cards
+          #   channels:
+          #     - UCGbshtvS9t-8CW11W7TooQg # Muse Asia
+          #     - UCUyeluBRhGPCW4rPe_UvBZQ # ThePrimeTime
+          #     - UCGKEMK3s-ZPbjVOIuAV8clQ # Core Dumped
+          #     - UCsBjURrPoezykLs9EqgamOA # Fireship
+          #     - UCdhPlZcpEqlVFIRuk4W5u8g # Nephis
+
+          - type: group
+            define: &shared-properties
+              type: reddit
+              show-thumbnails: true
+              style: vertical-list
+              show-flairs: true
+            widgets:
+              - subreddit: twice
+                <<: *shared-properties
+              - subreddit: anime
+                <<: *shared-properties
+              - subreddit: golang
+                <<: *shared-properties
+              - subreddit: selfhosted
+                <<: *shared-properties
+              - subreddit: linux
+                <<: *shared-properties
+              - subreddit: neovim
+                <<: *shared-properties
+              - subreddit: unixporn
+                <<: *shared-properties
+              - subreddit: ProgrammerHumor
+                <<: *shared-properties
+
+      - size: small
+        widgets:
+          - type: weather
+            location: Bacoor, Philippines
+
+          - type: markets
+            markets:
+              - symbol: SPY
+                name: S&P 500
+              - symbol: BTC-USD
+                name: Bitcoin
+              - symbol: NVDA
+                name: NVIDIA
+              - symbol: AAPL
+                name: Apple
+              - symbol: MSFT
+                name: Microsoft
+              - symbol: GOOGL
+                name: Google
+              - symbol: AMD
+                name: AMD
+              - symbol: RDDT
+                name: Reddit
+
+  - name: News
+    columns:
+      - size: full
+        widgets:
+          - type: hacker-news

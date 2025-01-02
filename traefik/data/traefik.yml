@@ -3,8 +3,8 @@ api:
   dashboard: true
   debug: true
 entryPoints:
-  ssh:
-    address: ":2222"
+  # ssh:
+  #   address: ":2222"
   http:
     address: ":80"
     http:
