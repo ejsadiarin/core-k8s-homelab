@@ -26,6 +26,7 @@ pages:
               - teej_dv
               - melkey
               - bogur
+              - sinatraa
               - razziebinx
 
           - type: lobsters
@@ -89,6 +90,12 @@ pages:
                 style: grid-cards
                 channels:
                   - UCUyeluBRhGPCW4rPe_UvBZQ # ThePrimeTime
+              - type: videos
+                title: Tsoding
+                limit: 7
+                style: grid-cards
+                channels:
+                  - UCrqM0Ym_NbK1fqeQG2VIohg # Tsoding/TsodingDaily
               - type: videos
                 title: Fireship
                 limit: 7
