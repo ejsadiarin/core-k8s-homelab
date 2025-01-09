@@ -1,0 +1,35 @@
+services:
+  beszel:
+    image: henrygd/beszel:latest
+    container_name: beszel
+    restart: unless-stopped
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    volumes:
+      - ./beszel_data:/beszel_data
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.beszel.rule=Host(`beszel.local.ejsadiarin.com`)"
+      - "traefik.http.routers.beszel.entrypoints=https"
+      - "traefik.http.routers.beszel.tls=true"
+      - "traefik.http.services.beszel.loadbalancer.server.port=8090"
+
+  beszel-agent:
+    image: henrygd/beszel-agent:latest
+    container_name: beszel-agent
+    restart: unless-stopped
+    network_mode: host
+    # ports:
+    #   - '45876:45876'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      PORT: 45876
+      # Do not remove quotes around the key
+      KEY: "${BESZEL_AGENT_PUBLIC_SSH_KEY}"
+
+networks:
+  proxy:
+    external: true

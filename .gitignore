@@ -12,3 +12,4 @@ gitea/postgres
 restic/
 homeassistant/config
 vaultwarden/data
+beszel/beszel_data
