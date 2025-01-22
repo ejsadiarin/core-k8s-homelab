@@ -64,6 +64,12 @@ pages:
               - title: Authentik
                 url: https://auth.local.ejsadiarin.com
                 icon: si:authentik
+              - title: Beszel
+                url: https://beszel.local.ejsadiarin.com
+                icon: si:beszel
+              - title: Vaultwarden
+                url: https://vaultwarden.local.ejsadiarin.com
+                icon: si:vaultwarden
               # - title: AdGuard Home
               #   url: https://adguard.ejsadiarin.com
               #   icon: /assets/adguard-logo.png
@@ -134,13 +140,17 @@ pages:
                 <<: *shared-properties
               - subreddit: selfhosted
                 <<: *shared-properties
+              - subreddit: neovim
+                <<: *shared-properties
               - subreddit: linux
                 <<: *shared-properties
-              - subreddit: neovim
+              - subreddit: homelab
+                <<: *shared-properties
+              - subreddit: tea
                 <<: *shared-properties
               - subreddit: unixporn
                 <<: *shared-properties
-              - subreddit: ProgrammerHumor
+              - subreddit: AskReddit
                 <<: *shared-properties
 
       - size: small
