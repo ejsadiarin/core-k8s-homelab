@@ -197,7 +197,7 @@ pages:
       - size: small
         widgets:
           - type: clock
-            hour-format: 24h
+            hour-format: 12h
             timezones:
               - timezone: Europe/Paris
                 label: Paris
@@ -205,6 +205,10 @@ pages:
                 label: New York
               - timezone: Asia/Tokyo
                 label: Tokyo
+              - timezone: Asia/Seoul
+                label: South Korea
+              - timezone: Australia/Sydney
+                label: Australia
 
           - type: releases
             show-source-icon: true
