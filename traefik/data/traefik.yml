@@ -3,8 +3,6 @@ api:
   dashboard: true
   debug: true
 entryPoints:
-  # ssh:
-  #   address: ":2222"
   http:
     address: ":80"
     http:
@@ -19,6 +17,8 @@ entryPoints:
         readTimeout: 600s
         idleTimeout: 600s
         writeTimeout: 600s
+  gitea_ssh:
+    address: ":222"
 serversTransport:
   insecureSkipVerify: true
 providers:

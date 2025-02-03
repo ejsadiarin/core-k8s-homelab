@@ -1,6 +1,7 @@
 services:
   traefik:
-    image: traefik:v3.1
+    image: traefik:latest
+    # image: traefik:v3.1
     container_name: traefik
     restart: unless-stopped
     security_opt:
@@ -8,7 +9,7 @@ services:
     networks:
       - proxy
     ports:
-      - 222:222/tcp
+      - 222:222
       - 80:80
       - 443:443
       # - 443:443/tcp # Uncomment if you want HTTP3
