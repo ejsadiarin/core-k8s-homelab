@@ -13,6 +13,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.beszel.rule=Host(`beszel.local.ejsadiarin.com`)"
       - "traefik.http.routers.beszel.entrypoints=https"
+      - "traefik.http.routers.beszel.middlewares=allow-iframe@file"
       - "traefik.http.routers.beszel.tls=true"
       - "traefik.http.services.beszel.loadbalancer.server.port=8090"
 

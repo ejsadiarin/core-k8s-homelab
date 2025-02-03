@@ -31,6 +31,8 @@ pages:
               - caseoh_
               - RDCgaming
               - tarik
+              - togglebit
+              - jinnytty
 
           - type: lobsters
             sort-by: hot
@@ -40,8 +42,17 @@ pages:
               - compsci
               - security
               - programming
+              - ai
+              - distributed
+              - networking
+              - osdev
+              - event
+              - release
+              - api
+              - devops
+              - performance
             limit: 15
-            collapse-after: 5
+            collapse-after: 8
 
       - size: full
         widgets:
@@ -182,6 +193,63 @@ pages:
 
   - name: News
     columns:
+
+      - size: small
+        widgets:
+          - type: clock
+            hour-format: 24h
+            timezones:
+              - timezone: Europe/Paris
+                label: Paris
+              - timezone: America/New_York
+                label: New York
+              - timezone: Asia/Tokyo
+                label: Tokyo
+
+          - type: releases
+            show-source-icon: true
+            repositories:
+              - immich-app/immich
+              - ejsadiarin/dotfiles
+              - glanceapp/glance
+              - ReVanced/revanced-patches
+              # - codeberg:redict/redict
+              # - gitlab:fdroid/fdroidclient
+              # - dockerhub:gotify/server
+
       - size: full
         widgets:
           - type: hacker-news
+            limit: 20
+            collapse-after: 10
+
+      - size: full
+        widgets:
+          - type: lobsters
+            limit: 20
+            collapse-after: 10
+            sort-by: hot
+            tags:
+              - go
+              - linux
+              - compsci
+              - security
+              - programming
+              - ai
+              - distributed
+              - networking
+              - osdev
+              - event
+              - release
+              - api
+              - devops
+              - performance
+
+
+  - name: Stats
+    columns:
+      - size: full
+        widgets:
+          - type: iframe
+            source: https://beszel.local.ejsadiarin.com/system/homelab
+            height: 800

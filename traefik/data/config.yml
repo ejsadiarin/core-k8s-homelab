@@ -29,7 +29,8 @@ http:
 
     default-headers:
       headers:
-        frameDeny: true
+        frameDeny: false
+        # frameDeny: true
         browserXssFilter: true
         contentTypeNosniff: true
         forceSTSHeader: true
@@ -39,6 +40,8 @@ http:
         customFrameOptionsValue: SAMEORIGIN
         customRequestHeaders:
           X-Forwarded-Proto: https
+          # handled by frameDeny:
+          # Content-Security-Policy: "frame-ancestors 'self' https://*.local.ejsadiarin.com;"
 
     default-whitelist:
       ipAllowList:
@@ -71,3 +74,10 @@ http:
           - X-authentik-meta-app
           - X-authentik-meta-version
 
+    allow-iframe:
+      headers:
+        contentSecurityPolicy: "frame-ancestors 'self' https://*.local.ejsadiarin.com;"
+        # customRequestHeaders:
+        #   X-Forwarded-Proto: https
+        #   # handled by frameDeny:
+        #   # Content-Security-Policy: "frame-ancestors 'self' https://*.local.ejsadiarin.com;"
