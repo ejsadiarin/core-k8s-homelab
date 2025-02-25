@@ -7,10 +7,11 @@ immich/postgres
 gotify/data
 portainer/data
 uptime_kuma/data
+gitea/data
+gitea-test/data
 gitea/gitea
 gitea/postgres
 restic/
 homeassistant/config
 vaultwarden/data
 beszel/beszel_data
-gitea-test/data
