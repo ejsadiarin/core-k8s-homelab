@@ -17,8 +17,8 @@ entryPoints:
         readTimeout: 600s
         idleTimeout: 600s
         writeTimeout: 600s
-  gitea_ssh:
-    address: ":222"
+  # gitea_ssh:
+  #   address: ":2221"
 serversTransport:
   insecureSkipVerify: true
 providers:

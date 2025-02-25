@@ -62,28 +62,34 @@ pages:
             sites:
               - title: Immich
                 url: https://immich.local.ejsadiarin.com
-                icon: si:immich
+                icon: di:immich
               - title: Gitea
                 url: https://git.local.ejsadiarin.com
-                icon: si:gitea
+                icon: di:gitea
               - title: Portainer
                 url: https://portainer.local.ejsadiarin.com
-                icon: si:portainer
+                icon: di:portainer
               - title: Ntfy
                 url: https://ntfy.local.ejsadiarin.com
-                icon: si:ntfy
+                icon: di:ntfy
               - title: Uptime Kuma
                 url: https://uptime-kuma.local.ejsadiarin.com
-                icon: si:uptimekuma
+                icon: di:uptime-kuma
               - title: Authentik
                 url: https://auth.local.ejsadiarin.com
-                icon: si:authentik
+                icon: di:authentik
               - title: Beszel
                 url: https://beszel.local.ejsadiarin.com
-                icon: si:beszel
+                icon: di:beszel
               - title: Vaultwarden
                 url: https://vaultwarden.local.ejsadiarin.com
                 icon: si:vaultwarden
+              - title: Traefik
+                url: https://traefik-dashboard.local.ejsadiarin.com
+                icon: di:traefik
+                alt-status-codes:
+                  - 401
+                  - 403
               # - title: AdGuard Home
               #   url: https://adguard.ejsadiarin.com
               #   icon: /assets/adguard-logo.png
@@ -171,6 +177,11 @@ pages:
         widgets:
           - type: weather
             location: Bacoor, Philippines
+
+          - type: server-stats
+            servers:
+              - type: local
+                name: Homelab
 
           - type: markets
             markets:
