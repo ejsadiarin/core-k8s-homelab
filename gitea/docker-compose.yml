@@ -36,20 +36,8 @@ services:
       - "traefik.http.routers.gitea.entrypoints=http"
       - "traefik.http.routers.gitea.entrypoints=https"
       # - "traefik.http.routers.gitea.service=gitea"
-      - "traefik.http.services.gitea.loadbalancer.server.port=3000"
-
-      - "traefik.backend=gitea"
-      - "traefik.docker.network=proxy"
-      - "traefik.default.protocol=http"
-      - "traefik.port=3000"
-
       - "traefik.http.routers.gitea.tls=true"
-
-      # SSH routing, can't route based on host so anything to port 222 will come to this container
-      - "traefik.tcp.routers.gitea-ssh.rule=HostSNI(`*`)"
-      - "traefik.tcp.routers.gitea-ssh.entrypoints=gitea_ssh"
-      - "traefik.tcp.routers.gitea-ssh.service=gitea-ssh-svc"
-      - "traefik.tcp.services.gitea-ssh-svc.loadbalancer.server.port=22"
+      - "traefik.http.services.gitea.loadbalancer.server.port=3000"
     logging:
       driver: "json-file"
       options:
