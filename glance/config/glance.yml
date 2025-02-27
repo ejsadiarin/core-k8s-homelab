@@ -64,7 +64,7 @@ pages:
                 url: https://immich.local.ejsadiarin.com
                 icon: di:immich
               - title: Gitea
-                url: https://git.local.ejsadiarin.com
+                url: https://gitea.local.ejsadiarin.com
                 icon: di:gitea
               - title: Portainer
                 url: https://portainer.local.ejsadiarin.com
