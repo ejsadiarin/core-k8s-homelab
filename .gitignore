@@ -11,6 +11,7 @@ gitea/data
 gitea-test/data
 gitea/gitea
 gitea/postgres
+gitea/gitea-db
 restic/
 homeassistant/config
 vaultwarden/data
