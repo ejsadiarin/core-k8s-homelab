@@ -1,0 +1,21 @@
+services:
+  silverbullet:
+    container_name: silverbullet
+    image: zefhemel/silverbullet:latest
+    restart: unless-stopped
+    volumes:
+      - ./space:/space
+    environment:
+      SB_USER: "${USERNAME}:${PASSWORD}"
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.silverbullet.rule=Host(`silverbullet.local.ejsadiarin.com`)"
+      - "traefik.http.routers.silverbullet.entrypoints=https"
+      - "traefik.http.routers.silverbullet.tls=true"
+      - "traefik.http.services.silverbullet.loadbalancer.server.port=3000"
+
+networks:
+  proxy:
+    external: true

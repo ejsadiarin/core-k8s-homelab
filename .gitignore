@@ -16,3 +16,7 @@ restic/
 homeassistant/config
 vaultwarden/data
 beszel/beszel_data
+fireflyiii/firefly_iii_db
+fireflyiii/.db.env
+obsidian/config
+silverbullet/space

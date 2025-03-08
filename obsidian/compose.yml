@@ -1,0 +1,32 @@
+services:
+  obsidian:
+    image: lscr.io/linuxserver/obsidian:latest
+    container_name: obsidian
+    security_opt:
+      - seccomp:unconfined #optional
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - ./config:/config
+      - $HOME/vault:/vault
+    # ports:
+    #   - 3000:3000
+    #   - 3001:3001
+    devices:
+      - /dev/dri:/dev/dri #optional
+    shm_size: "1gb"
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.obsidian.rule=Host(`obsidian.local.ejsadiarin.com`)"
+      - "traefik.http.routers.obsidian.entrypoints=https"
+      - "traefik.http.routers.obsidian.tls=true"
+      - "traefik.http.services.obsidian.loadbalancer.server.port=3000"
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
