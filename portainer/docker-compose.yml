@@ -1,7 +1,7 @@
 services:
   portainer:
     container_name: portainer
-    image: portainer/portainer-ce:2.21.4
+    image: portainer/portainer-ce:2.27.3
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
@@ -10,7 +10,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./data:/data
     networks:
-        - proxy
+      - proxy
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.portainer.entrypoints=http"
