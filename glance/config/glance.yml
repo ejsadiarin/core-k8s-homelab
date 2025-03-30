@@ -17,6 +17,7 @@ pages:
             channels:
               - theprimeagen
               - necros
+              - andr3wow
               - timthetatman
               - mooda
               - themainmanswe
@@ -96,54 +97,6 @@ pages:
               # - title: Vaultwarden
               #   url: https://vault.ejsadiarin.com
               #   icon: /assets/vaultwarden-logo.png
-          - type: group
-            widgets:
-              - type: videos
-                title: Core Dumped
-                limit: 7
-                style: grid-cards
-                channels:
-                  - UCGKEMK3s-ZPbjVOIuAV8clQ # Core Dumped
-              - type: videos
-                title: Muse Asia
-                limit: 20
-                style: horizontal-cards
-                channels:
-                  - UCGbshtvS9t-8CW11W7TooQg # Muse Asia
-              - type: videos
-                title: ThePrimeTime
-                limit: 7
-                style: grid-cards
-                channels:
-                  - UCUyeluBRhGPCW4rPe_UvBZQ # ThePrimeTime
-              - type: videos
-                title: Tsoding
-                limit: 7
-                style: grid-cards
-                channels:
-                  - UCrqM0Ym_NbK1fqeQG2VIohg # Tsoding/TsodingDaily
-              - type: videos
-                title: Fireship
-                limit: 7
-                style: grid-cards
-                channels:
-                  - UCsBjURrPoezykLs9EqgamOA # Fireship
-              - type: videos
-                title: Nephis
-                limit: 7
-                style: grid-cards
-                channels:
-                  - UCdhPlZcpEqlVFIRuk4W5u8g # Nephis
-
-          # - type: videos
-          #   limit: 25
-          #   style: horizontal-cards
-          #   channels:
-          #     - UCGbshtvS9t-8CW11W7TooQg # Muse Asia
-          #     - UCUyeluBRhGPCW4rPe_UvBZQ # ThePrimeTime
-          #     - UCGKEMK3s-ZPbjVOIuAV8clQ # Core Dumped
-          #     - UCsBjURrPoezykLs9EqgamOA # Fireship
-          #     - UCdhPlZcpEqlVFIRuk4W5u8g # Nephis
 
           - type: group
             define: &shared-properties
@@ -152,13 +105,17 @@ pages:
               style: vertical-list
               show-flairs: true
             widgets:
+              - subreddit: devops
+                <<: *shared-properties
+              - subreddit: kubernetes
+                <<: *shared-properties
+              - subreddit: selfhosted
+                <<: *shared-properties
               - subreddit: twice
                 <<: *shared-properties
               - subreddit: anime
                 <<: *shared-properties
               - subreddit: golang
-                <<: *shared-properties
-              - subreddit: selfhosted
                 <<: *shared-properties
               - subreddit: neovim
                 <<: *shared-properties
@@ -173,10 +130,77 @@ pages:
               - subreddit: AskReddit
                 <<: *shared-properties
 
+          - type: group
+            widgets:
+              - type: videos
+                title: Core Dumped
+                limit: 8
+                style: grid-cards
+                channels:
+                  - UCGKEMK3s-ZPbjVOIuAV8clQ # Core Dumped
+              - type: videos
+                title: Muse Asia
+                limit: 20
+                style: horizontal-cards
+                channels:
+                  - UCGbshtvS9t-8CW11W7TooQg # Muse Asia
+              - type: videos
+                title: ThePrimeTime
+                limit: 8
+                style: grid-cards
+                channels:
+                  - UCUyeluBRhGPCW4rPe_UvBZQ # ThePrimeTime
+              - type: videos
+                title: Tsoding
+                limit: 8
+                style: grid-cards
+                channels:
+                  - UCrqM0Ym_NbK1fqeQG2VIohg # Tsoding/TsodingDaily
+              - type: videos
+                title: Fireship
+                limit: 8
+                style: grid-cards
+                channels:
+                  - UCsBjURrPoezykLs9EqgamOA # Fireship
+              - type: videos
+                title: Nephis
+                limit: 8
+                style: grid-cards
+                channels:
+                  - UCdhPlZcpEqlVFIRuk4W5u8g # Nephis
+
+          # - type: videos
+          #   limit: 25
+          #   style: horizontal-cards
+          #   channels:
+          #     - UCGbshtvS9t-8CW11W7TooQg # Muse Asia
+          #     - UCUyeluBRhGPCW4rPe_UvBZQ # ThePrimeTime
+          #     - UCGKEMK3s-ZPbjVOIuAV8clQ # Core Dumped
+          #     - UCsBjURrPoezykLs9EqgamOA # Fireship
+          #     - UCdhPlZcpEqlVFIRuk4W5u8g # Nephis
+
+          - type: rss
+            title: RSS
+            style: vertical-list
+            feeds:
+              - url: https://selfh.st/rss/
+                title: selfh.st
+
       - size: small
         widgets:
           - type: weather
             location: Bacoor, Philippines
+
+          - type: releases
+            show-source-icon: true
+            repositories:
+              - immich-app/immich
+              - ejsadiarin/dotfiles
+              - glanceapp/glance
+              - ReVanced/revanced-patches
+              # - codeberg:redict/redict
+              # - gitlab:fdroid/fdroidclient
+              # - dockerhub:gotify/server
 
           - type: server-stats
             servers:
@@ -204,7 +228,6 @@ pages:
 
   - name: News
     columns:
-
       - size: small
         widgets:
           - type: clock
@@ -259,7 +282,6 @@ pages:
               - api
               - devops
               - performance
-
 
   - name: Stats
     columns:
