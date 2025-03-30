@@ -1,0 +1,37 @@
+name: consumet
+
+services:
+  consumet_api:
+    container_name: consumet_api
+    image: riimuru/consumet-api
+    restart: always
+    env_file: .env
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:3000/meta/anilist/info/21 || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.consumet.rule=Host(`consumet-api.local.ejsadiarin.com`)"
+      - "traefik.http.routers.consumet.entrypoints=https"
+      - "traefik.http.routers.consumet.tls=true"
+      - "traefik.http.services.consumet.loadbalancer.server.port=3000"
+    depends_on:
+      - consumet_api_redis
+    networks:
+      - proxy
+
+  consumet_api_redis:
+    container_name: consumet_api_redis
+    image: docker.io/redis:6.2-alpine@sha256:2ba50e1ac3a0ea17b736ce9db2b0a9f6f8b85d4c27d5f5accc6a416d8f42c6d5
+    healthcheck:
+      test: redis-cli ping || exit 1
+    restart: always
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
