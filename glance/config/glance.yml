@@ -1,3 +1,4 @@
+---
 # server:
 #   assets-path: /app/assets
 
@@ -17,7 +18,7 @@ pages:
             channels:
               - theprimeagen
               - necros
-              - andr3wow
+              - whyAndr3w
               - timthetatman
               - mooda
               - themainmanswe
@@ -91,12 +92,12 @@ pages:
                 alt-status-codes:
                   - 401
                   - 403
-              # - title: AdGuard Home
-              #   url: https://adguard.ejsadiarin.com
-              #   icon: /assets/adguard-logo.png
-              # - title: Vaultwarden
-              #   url: https://vault.ejsadiarin.com
-              #   icon: /assets/vaultwarden-logo.png
+                  # - title: AdGuard Home
+                  #   url: https://adguard.ejsadiarin.com
+                  #   icon: /assets/adguard-logo.png
+                  # - title: Vaultwarden
+                  #   url: https://vault.ejsadiarin.com
+                  #   icon: /assets/vaultwarden-logo.png
 
           - type: group
             define: &shared-properties
@@ -105,33 +106,49 @@ pages:
               style: vertical-list
               show-flairs: true
             widgets:
-              - subreddit: devops
-                <<: *shared-properties
-              - subreddit: kubernetes
-                <<: *shared-properties
+              - subreddit: dataengineering
+                !!merge <<: *shared-properties
               - subreddit: selfhosted
-                <<: *shared-properties
+                !!merge <<: *shared-properties
               - subreddit: twice
-                <<: *shared-properties
-              - subreddit: anime
-                <<: *shared-properties
-              - subreddit: golang
-                <<: *shared-properties
+                !!merge <<: *shared-properties
+              - subreddit: devops
+                !!merge <<: *shared-properties
+              - subreddit: kubernetes
+                !!merge <<: *shared-properties
               - subreddit: neovim
-                <<: *shared-properties
+                !!merge <<: *shared-properties
+              - subreddit: aws
+                !!merge <<: *shared-properties
+              - subreddit: anime
+                !!merge <<: *shared-properties
+              - subreddit: golang
+                !!merge <<: *shared-properties
               - subreddit: linux
-                <<: *shared-properties
+                !!merge <<: *shared-properties
               - subreddit: homelab
-                <<: *shared-properties
+                !!merge <<: *shared-properties
               - subreddit: tea
-                <<: *shared-properties
+                !!merge <<: *shared-properties
               - subreddit: unixporn
-                <<: *shared-properties
+                !!merge <<: *shared-properties
               - subreddit: AskReddit
-                <<: *shared-properties
+                !!merge <<: *shared-properties
 
           - type: group
             widgets:
+              - type: videos
+                title: Data with Zach
+                limit: 8
+                style: grid-cards
+                channels:
+                  - UCAq9f7jFEA7Mtl3qOZy2h1A # Data with Zach
+              - type: videos
+                title: Hello SWE
+                limit: 8
+                style: grid-cards
+                channels:
+                  - UC3kf-QFT6FZzDk9JsPg8Svg # Hello SWE
               - type: videos
                 title: Core Dumped
                 limit: 8
@@ -268,15 +285,19 @@ pages:
             collapse-after: 10
             sort-by: hot
             tags:
+              - databases
+              - plt
+              - distributed
+              - scaling
               - go
               - linux
               - compsci
               - security
               - programming
               - ai
-              - distributed
               - networking
               - osdev
+              - vim
               - event
               - release
               - api

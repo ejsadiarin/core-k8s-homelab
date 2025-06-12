@@ -1,3 +1,4 @@
+---
 services:
   glance:
     image: glanceapp/glance
