@@ -5,94 +5,106 @@
 > [!IMPORTANT]
 > **make sure that backups include the docker volumes for ALL services**
 
-# Backing Up
+## Backing Up
 
 NOTE: database backups should be `dump`ed, not copied (e.g. `pg_dump` for postgresql)
 - see instructions below for specifics
 
 *  Traefik
-- bind: `./data` 
-- volume: `traefik-certs` (`/var/lib/docker/volumes/traefik-certs/_data`) 
+  - bind: `./data` 
+  - volume: `traefik-certs` (`/var/lib/docker/volumes/traefik-certs/_data`) 
 
 * Authentik
-- bind: `./media`
-- bind: `./custom-templates`
-- bind: `./certs`
-- volume: `database` (`/var/lib/docker/volumes/authentik_database/_data`)
-```bash
-# In general:
-docker exec -i <postgres-container> /usr/local/bin/pg_dump --username <postgres-user> <postgres-database> > <target-dump-file>
+  - bind: `./media`
+  - bind: `./custom-templates`
+  - bind: `./certs`
+  - volume: `database` (`/var/lib/docker/volumes/authentik_database/_data`)
+  - volume: `redis` (`/var/lib/docker/volumes/authentik_redis/_data`)
+      - NOTE: no need to backup redis volume
 
-# concrete:
-docker exec -i authentik-postgres /usr/local/bin/pg_dump --username authentik-pg-admin authentik-pg-db > ~/backups/authentik/postgres-backup.sql
+  ```bash
+  # In general:
+  docker exec -i <postgres-container> /usr/local/bin/pg_dump --username <postgres-user> <postgres-database> > <target-dump-file>
 
-# THEN: after dump then create backup of ~/services/authentik (includes db, media, and other things)
-```
-- volume: `redis` (`/var/lib/docker/volumes/authentik_redis/_data`)
-    - NOTE: no need to backup redis volume
+  # concrete:
+  docker exec -i authentik-postgres /usr/local/bin/pg_dump --username authentik-pg-admin authentik-pg-db > ~/backups/authentik/postgres-backup.sql
+
+  # THEN: after dump then create backup of ~/services/authentik (includes db, media, and other things)
+  ```
+
 
 
 * Immich - read [backup and restore docs](https://immich.app/docs/administration/backup-and-restore/#filesystem)
-- bind: `./library/library`
-- bind: `./library/upload`
-- bind: `./library/profile`
-- bind: `./library/backups` (for the database) - immich does auto backups for db
-- volume: `model-cache` (`/var/lib/docker/volumes/immich_model-cache/_data`)
-    - NOTE: no need to backup model-cache volume
+  - bind: `./library/library`
+  - bind: `./library/upload`
+  - bind: `./library/profile`
+  - bind: `./library/backups` (for the database) - immich does auto backups for db
+  - volume: `model-cache` (`/var/lib/docker/volumes/immich_model-cache/_data`)
+      - NOTE: no need to backup model-cache volume
 
 * Gitea - read [backup and restore docs](https://docs.gitea.com/next/administration/backup-and-restore)
-- bind: `./gitea`
-- bind: `./postgres` ?? (pg_dump this)
-- all:
-```bash
-docker exec --user git -it gitea /bin/bash
-gitea dump -c /data/gitea/conf/app.ini
-cd /data/git
-# backup the .zip file
-<backup-script-command> $(find /data/git -type f -name "*.zip")
-# or find newest zip: find /path/to/search -type f -name "*.zip" -R -printf '%T+ %p\n' | sort -r | head -n 1
-# copy zip backup to host
-docker cp gitea:/data/git/*.zip ~/services/gitea/
-```
-- one-liner:
-```bash
-docker exec --user git -it gitea /bin/bash
-# inside the docker shell:
-gitea dump -c /data/gitea/conf/app.ini
-find /data/git -type f -name "*.zip" -R -printf '%T+ %p\n' | sort -r | head -n 1
-docker cp gitea:/data/git/*.zip ~/services/gitea/
-```
+  - bind: `./gitea`
+  - bind: `./postgres` ?? (pg_dump this)
+
+  - all:
+  ```bash
+  docker exec --user git -it gitea /bin/bash
+  gitea dump -c /data/gitea/conf/app.ini
+  cd /data/git
+  # backup the .zip file
+  <backup-script-command> $(find /data/git -type f -name "*.zip")
+  # or find newest zip: find /path/to/search -type f -name "*.zip" -R -printf '%T+ %p\n' | sort -r | head -n 1
+  # copy zip backup to host
+  docker cp gitea:/data/git/*.zip ~/services/gitea/
+  ```
+
+  - one-liner:
+
+  ```bash
+  docker exec --user git -it gitea /bin/bash
+  # inside the docker shell:
+  gitea dump -c /data/gitea/conf/app.ini
+  find /data/git -type f -name "*.zip" -R -printf '%T+ %p\n' | sort -r | head -n 1
+  docker cp gitea:/data/git/*.zip ~/services/gitea/
+  ```
 
 * Ntfy
-- bind: `./cache`
-- bind: `./etc`
+  - bind: `./cache`
+  - bind: `./etc`
 
 * Portainer
-- bind: `./data`
+  - bind: `./data`
 
 * Uptime Kuma
-- bind: `./data`
+  - bind: `./data`
 
-## Traefik
+---
+
+### Traefik
 
 - make sure to add a certificate file `acme.json` on `services/traefik/data/`
 
 ```bash
 touch services/traefik/data/acme.json
 ```
-## Authentik
+
+---
+
+### Authentik
 
 *note that: run `sudo sysctl vm.overcommit_memory=1` for redis*
 
-### middlewares:
+#### Authentik Middlewares
 
 - `authentik@file` - services with type: `Proxy Provider`
 
-## Immich
+---
+
+### Immich
 
 *note that: run `sudo sysctl vm.overcommit_memory=1` for redis*
 
-### backup immich regularly
+#### Backup Immich Regularly
 
 1. postgres db backup immich
 - built-in automatic backups (see docs)
@@ -114,7 +126,8 @@ backup onsite & offsite
 ```bash
 ```
 
-### restore from backup
+#### Restore from Backup
+
 - see [docs](https://immich.app/docs/administration/backup-and-restore#manual-backup-and-restore) for more details
 
 ```bash
