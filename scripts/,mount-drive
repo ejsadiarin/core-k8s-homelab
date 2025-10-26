@@ -3,10 +3,8 @@
 # all will have rw access
 # sudo mount -t exfat -o umask=000 /dev/sda1 /mnt/sda1
 
-sudo umount /mnt/sda /mnt/sdb /mnt/sdc /mnt/sdd
-
 # only user will have rw access
-sudo mount -t exfat -o uid=$(id -u),gid=$(id -g) /dev/sda1 /mnt/sda
-sudo mount -t exfat -o uid=$(id -u),gid=$(id -g) /dev/sdb1 /mnt/sdb
-sudo mount -t exfat -o uid=$(id -u),gid=$(id -g) /dev/sdc1 /mnt/sdc
-sudo mount -t exfat -o uid=$(id -u),gid=$(id -g) /dev/sdd1 /mnt/sdd
+sudo mount -o rw,uid=$(id -u),gid=$(id -g) /dev/sda1 /mnt/sda
+sudo mount -o rw,uid=$(id -u),gid=$(id -g) /dev/sdb1 /mnt/sdb
+sudo mount -o rw,uid=$(id -u),gid=$(id -g) /dev/sdc1 /mnt/sdc
+sudo mount -o rw,uid=$(id -u),gid=$(id -g) /dev/sdd1 /mnt/sdd
