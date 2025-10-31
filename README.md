@@ -1,146 +1,68 @@
-# Homelab Services
+# 
 
-- for the complete documentation see [https://github.com/ejsadiarin/wizardry](https://github.com/ejsadiarin/wizardry)
+## Encrypting vault file (ansible)
 
-> [!IMPORTANT]
-> **make sure that backups include the docker volumes for ALL services**
+1. **Create and encrypt the vault file:**
+   ```sh
+   ansible-vault create ansible/vault.yml
+   ```
 
-## Backing Up
+   - Add your sensitive variables:
+   ```yaml
+   k3s_token: "YOUR_VERY_SECURE_CLUSTER_TOKEN"
+   tailscale_auth_key: "tskey-auth-..."
+   ```
 
-NOTE: database backups should be `dump`ed, not copied (e.g. `pg_dump` for postgresql)
-- see instructions below for specifics
+2. **Modify your inventory file to use `vars_files`:**
+   Replace the sensitive variables with a reference to the vault file.
 
-*  Traefik
-  - bind: `./data` 
-  - volume: `traefik-certs` (`/var/lib/docker/volumes/traefik-certs/_data`) 
+   ```yaml
+   # filepath: ansible/inventory.yml
+   ---
+   k3s_cluster:
+     children:
+       server:
+         hosts:
+           100.x.x.100:
+             ansible_user: homelab-admin
+       agent:
+         hosts:
+           100.x.x.200:
+             ansible_user: root
+     vars_files:
+       - vault.yml
+     vars:
+       # --- Server Configuration ---
+       k3s_extra_server_args: >-
+         --cluster-init
+         --tls-san={{ hostvars[groups['server']]['inventory_hostname'] }}
+         --tls-san={{ kube_vip_address }}
+         --node-external-ip={{ hostvars[groups['server']]['inventory_hostname'] }}
+         --vpn-auth="name=tailscale,joinKey={{ tailscale_auth_key }}"
+         --disable=traefik
+         --disable=servicelb
+         --write-kubeconfig-mode "644"
+         --kube-apiserver-arg "default-not-ready-toleration-seconds=30"
+         --kube-apiserver-arg "default-unreachable-toleration-seconds=30"
+         --kubelet-arg "node-status-update-frequency=5s"
+       # --- Agent Configuration ---
+       k3s_extra_agent_args: >-
+         --node-external-ip={{ inventory_hostname }}
+         --vpn-auth="name=tailscale,joinKey={{ tailscale_auth_key }}"
+         --kubelet-arg "node-status-update-frequency=5s"
+       # --- Global Variables ---
+       kube_vip_address: "192.168.70.100"
+   ```
 
-* Authentik
-  - bind: `./media`
-  - bind: `./custom-templates`
-  - bind: `./certs`
-  - volume: `database` (`/var/lib/docker/volumes/authentik_database/_data`)
-  - volume: `redis` (`/var/lib/docker/volumes/authentik_redis/_data`)
-      - NOTE: no need to backup redis volume
+3. **Use your vault file with Ansible commands:**
+   ```sh
+   ansible-playbook -i ansible/inventory.yml playbook.yml --ask-vault-pass
+   ```
 
-  ```bash
-  # In general:
-  docker exec -i <postgres-container> /usr/local/bin/pg_dump --username <postgres-user> <postgres-database> > <target-dump-file>
+   ```
+## Run setup (ansible)
 
-  # concrete:
-  docker exec -i authentik-postgres /usr/local/bin/pg_dump --username authentik-pg-admin authentik-pg-db > ~/backups/authentik/postgres-backup.sql
-
-  # THEN: after dump then create backup of ~/services/authentik (includes db, media, and other things)
-  ```
-
-
-
-* Immich - read [backup and restore docs](https://immich.app/docs/administration/backup-and-restore/#filesystem)
-  - bind: `./library/library`
-  - bind: `./library/upload`
-  - bind: `./library/profile`
-  - bind: `./library/backups` (for the database) - immich does auto backups for db
-  - volume: `model-cache` (`/var/lib/docker/volumes/immich_model-cache/_data`)
-      - NOTE: no need to backup model-cache volume
-
-* Gitea - read [backup and restore docs](https://docs.gitea.com/next/administration/backup-and-restore)
-  - bind: `./gitea`
-  - bind: `./postgres` ?? (pg_dump this)
-
-  - all:
-  ```bash
-  docker exec --user git -it gitea /bin/bash
-  gitea dump -c /data/gitea/conf/app.ini
-  cd /data/git
-  # backup the .zip file
-  <backup-script-command> $(find /data/git -type f -name "*.zip")
-  # or find newest zip: find /path/to/search -type f -name "*.zip" -R -printf '%T+ %p\n' | sort -r | head -n 1
-  # copy zip backup to host
-  docker cp gitea:/data/git/*.zip ~/services/gitea/
-  ```
-
-  - one-liner:
-
-  ```bash
-  docker exec --user git -it gitea /bin/bash
-  # inside the docker shell:
-  gitea dump -c /data/gitea/conf/app.ini
-  find /data/git -type f -name "*.zip" -R -printf '%T+ %p\n' | sort -r | head -n 1
-  docker cp gitea:/data/git/*.zip ~/services/gitea/
-  ```
-
-* Ntfy
-  - bind: `./cache`
-  - bind: `./etc`
-
-* Portainer
-  - bind: `./data`
-
-* Uptime Kuma
-  - bind: `./data`
-
----
-
-### Traefik
-
-- make sure to add a certificate file `acme.json` on `services/traefik/data/`
-
+- decrypt the vault
 ```bash
-touch services/traefik/data/acme.json
-```
-
----
-
-### Authentik
-
-*note that: run `sudo sysctl vm.overcommit_memory=1` for redis*
-
-#### Authentik Middlewares
-
-- `authentik@file` - services with type: `Proxy Provider`
-
----
-
-### Immich
-
-*note that: run `sudo sysctl vm.overcommit_memory=1` for redis*
-
-#### Backup Immich Regularly
-
-1. postgres db backup immich
-- built-in automatic backups (see docs)
-
-- if need manual:
-```bash
-docker exec -t immich_postgres pg_dumpall --clean --if-exists --username=postgres | gzip > "/path/to/backup/dump.sql.gz"
-```
-
-
-2. library (media files) backup
-
-only need to backup original content stored in:
-- `UPLOAD_LOCATION/library`
-- `UPLOAD_LOCATION/upload`
-- `UPLOAD_LOCATION/profile`
-
-backup onsite & offsite
-```bash
-```
-
-#### Restore from Backup
-
-- see [docs](https://immich.app/docs/administration/backup-and-restore#manual-backup-and-restore) for more details
-
-```bash
-docker compose down -v  # CAUTION! Deletes all Immich data to start from scratch
-## Uncomment the next line and replace DB_DATA_LOCATION with your Postgres path to permanently reset the Postgres database
-# rm -rf DB_DATA_LOCATION # CAUTION! Deletes all Immich data to start from scratch
-docker compose pull             # Update to latest version of Immich (if desired)
-docker compose create           # Create Docker containers for Immich apps without running them
-docker start immich_postgres    # Start Postgres server
-sleep 10                        # Wait for Postgres server to start up
-# Check the database user if you deviated from the default
-gunzip < "/path/to/backup/dump.sql.gz" \
-| sed "s/SELECT pg_catalog.set_config('search_path', '', false);/SELECT pg_catalog.set_config('search_path', 'public, pg_catalog', true);/g" \
-| docker exec -i immich_postgres psql --username=postgres  # Restore Backup
-docker compose up -d            # Start remainder of Immich apps
+ansible-playbook -i ansible/inventory.yml playbook.yml --ask-vault-pass
 ```

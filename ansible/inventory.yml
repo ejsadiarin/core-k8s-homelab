@@ -1,0 +1,43 @@
+---
+# ansible/inventory.yml
+k3s_cluster:
+  children:
+    server:
+      hosts:
+        # Use the Tailscale IP of your local server
+        # 100.75.5.98:
+        homelab:
+          ansible_user: ejs
+    agent:
+      hosts:
+        # Use the Tailscale IP of your remote VM
+        100.75.212.53:
+          ansible_user: root # Or your sudo user on the remote VM
+
+  vars_files:
+    - vault.yml
+  vars:
+    # --- Server Configuration ---
+    k3s_extra_server_args: >-
+      --cluster-init
+      --tls-san={{ hostvars[groups['server']]['inventory_hostname'] }}
+      --tls-san={{ kube_vip_address }}
+      --node-external-ip={{ hostvars[groups['server']]['inventory_hostname'] }}
+      --vpn-auth="name=tailscale,joinKey={{ tailscale_auth_key }}"
+      --disable=traefik
+      --disable=servicelb
+      --write-kubeconfig-mode "644"
+      --kube-apiserver-arg "default-not-ready-toleration-seconds=30"
+      --kube-apiserver-arg "default-unreachable-toleration-seconds=30"
+      --kubelet-arg "node-status-update-frequency=5s"
+
+    # --- Agent Configuration ---
+    k3s_extra_agent_args: >-
+      --node-external-ip={{ inventory_hostname }}
+      --vpn-auth="name=tailscale,joinKey={{ tailscale_auth_key }}"
+      --kubelet-arg "node-status-update-frequency=5s"
+
+    # --- Global Variables ---
+    # This is the virtual IP for your control plane, managed by kube-vip.
+    # This should be a LAN IP, as kube-vip operates on your local network.
+    kube_vip_address: "192.168.70.100"
