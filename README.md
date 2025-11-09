@@ -1,5 +1,14 @@
 # 
 
+## Kubernetes
+
+- to test if working
+```bash
+export KUBECONFIG=<kubeconfig-path>
+kubectl config use-context default
+kubectl get node -o wide
+```
+
 ## Encrypting vault file (ansible)
 
 1. **Create and encrypt the vault file:**
