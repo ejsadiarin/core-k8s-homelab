@@ -1,0 +1,9 @@
+formatter:
+  indent: 2                # Standard YAML indentation
+  include_document_start: true  # Usually '---' is not needed unless required by tooling
+  retain_line_breaks_single: true  # Preserve line breaks for single-line values
+  line_ending: lf          # Use LF for Linux compatibility
+  explicit_start: false    # Don't force '---' at the start unless needed
+  explicit_end: false      # Don't force '...' at the end unless needed
+  sequence_style: block    # Use block style for lists (more readable)
+  mapping_style: block     # Use block style for mappings (more readable)
