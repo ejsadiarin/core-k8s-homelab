@@ -5,9 +5,12 @@ kind: IPAddressPool
 metadata:
   name: main-pool
   namespace: metallb-system
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   addresses:
     - 192.168.70.100-192.168.70.110
+  autoAssign: true
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/metallb.io/l2advertisement_v1beta1.json 
 apiVersion: metallb.io/v1beta1
@@ -15,6 +18,8 @@ kind: L2Advertisement
 metadata:
   name: main-l2
   namespace: metallb-system
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   ipAddressPools:
     - main-pool
