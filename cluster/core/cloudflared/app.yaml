@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/argoproj.io/application_v1alpha1.json
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cloudflared
+  namespace: argocd
+  finalizers: [resources-finalizer.argocd.argoproj.io]
+  annotations:
+    argocd.argoproj.io/sync-wave: "6"
+spec:
+  project: default
+  source:
+    repoURL: https://community-charts.github.io/helm-charts
+    chart: cloudflared
+    targetRevision: 2.2.4
+    helm:
+      values: |
+        # This tells the chart to use the secret we created manually
+        tunnelSecrets:
+          existingConfigJsonFileSecret:
+            name: cloudflare-tunnel-secret-credentials  # The name of the k8s secret
+            key: credentials.json                       # The key inside the secret
+
+        # This configures the tunnel itself (what the Deployment/ConfigMap will use)
+        tunnelConfig:
+          name: "k3s-homelab-tunnel" # The name you used in 'cloudflared tunnel create'
+          logLevel: "info"
+          protocol: "auto"
+
+          # This is where we tell the tunnel what to proxy.
+          # This replaces the need for the 'ingress' block in the old chart.
+          # can specify hostname or wildcard
+          # - afterwards, do a: cloudflared tunnel route dns k3s-homelab-tunnel *.your-domain.com
+          config:
+            # - hostname: "immich.your-domain.com"
+            #   service: http://traefik.traefik.svc.cluster.local:80
+            - hostname: "*.ejsadiarin.com"
+              service: http://traefik.traefik.svc.cluster.local:80
+            # A catch-all rule to terminate any other requests
+            - service: http_status:404
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cloudflared
+  syncPolicy:
+    automated: {prune: true, selfHeal: true}
+    syncOptions: [CreateNamespace=true]

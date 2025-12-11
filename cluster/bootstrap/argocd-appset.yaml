@@ -8,27 +8,29 @@ metadata:
 
 spec:
   generators:
-    - list:
-        elements:
-          - {component: core, namespace: kube-system}
-          - {component: storage, namespace: kube-system}
-          - {component: security, namespace: vault}
-          - {component: observability, namespace: monitoring}
+    - git:
+        repoURL: 'https://github.com/ejsadiarin/core-k8s-homelab.git'
+        revision: k8s
+        directories:
+          - path: cluster/core/*
   template:
     metadata:
-      name: '{{component}}'
+      name: '{{path.basename}}'
+      annotations:
+        # argocd.argoproj.io/sync-wave: "0" # Individual apps should set their own sync-wave
     spec:
       project: default
       source:
         repoURL: 'https://github.com/ejsadiarin/core-k8s-homelab.git'
         targetRevision: k8s
-        path: 'cluster/{{component}}'
+        path: '{{path}}'
       destination:
         server: 'https://kubernetes.default.svc'
-        namespace: '{{namespace}}'
+        # Namespace will be determined by the app.yaml inside each component folder
+        namespace: '{{path.basename}}'
       syncPolicy:
         automated: {prune: true, selfHeal: true}
-        syncOptions: [CreateNamespace=true]
+        syncOptions: [CreateNamespace=true] # Let individual apps decide if they need CreateNamespace=true
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/argoproj.io/applicationset_v1alpha1.json
 apiVersion: argoproj.io/v1alpha1

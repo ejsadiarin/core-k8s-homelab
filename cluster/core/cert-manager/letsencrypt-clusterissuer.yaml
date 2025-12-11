@@ -18,8 +18,4 @@ spec:
             apiTokenSecretRef:
               name: cloudflare-api-token-secret
               key: api-token
-    # - http01:
-    #     gatewayHTTPRoute:
-    #       parentRefs:
-    #         - name: traefik
-    #           namespace: traefik
+
