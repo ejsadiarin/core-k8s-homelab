@@ -15,7 +15,7 @@ spec:
           - path: cluster/core/*
   template:
     metadata:
-      name: '{{path.basename}}'
+      name: '{{path.basename}}-bootstrap'
       # annotations:
       # argocd.argoproj.io/sync-wave: "0" # Individual apps should set their own sync-wave
     spec:
@@ -27,7 +27,7 @@ spec:
       destination:
         server: 'https://kubernetes.default.svc'
         # Namespace will be determined by the app.yaml inside each component folder
-        namespace: '{{path.basename}}'
+        namespace: 'argocd'
       syncPolicy:
         automated: {prune: true, selfHeal: true}
         syncOptions: [CreateNamespace=true] # Let individual apps decide if they need CreateNamespace=true
