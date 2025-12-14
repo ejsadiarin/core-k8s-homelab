@@ -1,0 +1,15 @@
+# apps/production/traefik-middlewares/secured-chain.yaml
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/traefik.io/middleware_v1alpha1.json
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: secured
+  namespace: traefik
+spec:
+  chain:
+    middlewares:
+      - name: default-whitelist
+        namespace: traefik
+      - name: default-headers
+        namespace: traefik
