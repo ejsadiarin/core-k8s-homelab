@@ -7,34 +7,32 @@ metadata:
   namespace: argocd
   finalizers: [resources-finalizer.argocd.argoproj.io]
   annotations:
-    argocd.argoproj.io/sync-wave: "0" # Install first
+    argocd.argoproj.io/sync-wave: "0" # install first
 spec:
   project: default
   source:
     repoURL: https://helm.cilium.io/
     chart: cilium
-    targetRevision: 1.15.5 # Use a specific version or latest stable
+    targetRevision: 1.18.4 # should be latest stable
     helm:
       values: |
         kubeProxyReplacement: strict
-        k8sServiceHost: <YOUR_K3S_API_SERVER_IP> # Replace with your K3s API server IP
+        k8sServiceHost: <YOUR_K3S_API_SERVER_IP> # k3s API server IP
         k8sServicePort: 6443
 
         ipam:
           mode: kubernetes
 
-        # Enable L2 Announcement for Load Balancer services
-        # This replaces MetalLB
         loadBalancer:
-          mode: "hybrid" # or "dedicated"
+          mode: "hybrid" # "hybrid" (handles LoadBalancer services L2 ARP/NDP local network announcements and L3 routing, BGP, etc. external integrations) or "dedicated" (only use L2 announcements for LoadBalancer services, simpler but limited to L2 announcements)
           l2announcements:
-            enabled: true
+            enabled: false
 
         # Enable Gateway API support
         gatewayAPI:
           enabled: true
           # configure other gatewayAPI specific settings if needed
-        
+
         # Configure hubble if desired
         hubble:
           enabled: true
@@ -44,7 +42,7 @@ spec:
             enabled: true
   destination:
     server: https://kubernetes.default.svc
-    namespace: kube-system # Cilium usually runs in kube-system
+    namespace: kube-system # cilium usually runs in kube-system
   syncPolicy:
     automated: {prune: true, selfHeal: true}
     syncOptions: [CreateNamespace=false] # kube-system already exists

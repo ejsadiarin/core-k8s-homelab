@@ -10,7 +10,7 @@ spec:
     - name: cilium-gateway # Assuming Cilium Gateway is named cilium-gateway
       namespace: kube-system # Assuming Cilium Gateway is in kube-system
   hostnames:
-    - "argocd.local.ejsadiarin.com"
+    - "argocd.ejsadiarin.com"
   rules:
     - matches:
         - path:

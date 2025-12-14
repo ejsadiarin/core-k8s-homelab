@@ -34,9 +34,9 @@ spec:
           # - afterwards, do a: cloudflared tunnel route dns k3s-homelab-tunnel *.your-domain.com
           config:
             # - hostname: "immich.your-domain.com"
-            #   service: http://traefik.traefik.svc.cluster.local:80
+            #   service: http://cilium-gateway-cilium-gateway.kube-system.svc.cluster.local:80
             - hostname: "*.ejsadiarin.com"
-              service: http://traefik.traefik.svc.cluster.local:80
+              service: http://cilium-gateway-cilium-gateway.kube-system.svc.cluster.local:80
             # A catch-all rule to terminate any other requests
             - service: http_status:404
   destination:
