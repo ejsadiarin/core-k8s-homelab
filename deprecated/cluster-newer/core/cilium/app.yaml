@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/argoproj.io/application_v1alpha1.json
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cilium
+  namespace: argocd
+  finalizers: [resources-finalizer.argocd.argoproj.io]
+  annotations:
+    argocd.argoproj.io/sync-wave: "0" # install first
+spec:
+  project: default
+  source:
+    repoURL: https://helm.cilium.io/
+    chart: cilium
+    targetRevision: 1.18.4 # should be latest stable
+    helm:
+      values: |
+        kubeProxyReplacement: true
+        k8sServiceHost: 100.117.44.99 # k3s API server IP
+        k8sServicePort: 6443
+        ipam:
+          mode: kubernetes
+        loadBalancer:
+          mode: "hybrid" # "hybrid" (handles LoadBalancer services L2 ARP/NDP local network announcements and L3 routing, BGP, etc. external integrations) or "dedicated" (only use L2 announcements for LoadBalancer services, simpler but limited to L2 announcements)
+          l2announcements:
+            enabled: false
+
+        # Enable Gateway API support
+        gatewayAPI:
+          enabled: true
+          # configure other gatewayAPI specific settings if needed
+
+        # Configure hubble if desired
+        hubble:
+          enabled: true
+          relay:
+            enabled: true
+          ui:
+            enabled: true
+
+        enableIPv4Masquerade: false
+        devices: tailscale0 
+        mtu: 1200
+        bpf:
+          masquerade: false
+        k3s:
+          enabled: true
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system # cilium usually runs in kube-system
+  syncPolicy:
+    automated: {prune: true, selfHeal: true}
+    syncOptions: [CreateNamespace=false] # kube-system already exists
