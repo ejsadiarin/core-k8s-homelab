@@ -1,0 +1,71 @@
+{
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  extends: [
+    'config:recommended',
+  ],
+  prHourlyLimit: 3,
+  enabledManagers: [
+    'helm-values',
+    'kubernetes',
+    'kustomize',
+    'argocd',
+  ],
+  argocd: {
+    managerFilePatterns: [
+      '/^cluster/infrastructure/.+\\.yaml$/',
+      '/^cluster/apps/.+\\.yaml$/',
+      '/^cluster/monitoring/.+\\.yaml$/',
+    ],
+  },
+  kubernetes: {
+    managerFilePatterns: [
+      '/^cluster/infrastructure/.+\\.yaml$/',
+      '/^cluster/apps/.+\\.yaml$/',
+      '/^cluster/monitoring/.+\\.yaml$/',
+    ],
+  },
+  'helm-values': {
+    managerFilePatterns: [
+      '/^cluster/infrastructure/.+/values\\.yaml$/',
+      '/^cluster/apps/.+/values\\.yaml$/',
+      '/^cluster/monitoring/.+/values\\.yaml$/',
+    ],
+  },
+  kustomize: {
+    managerFilePatterns: [
+      '/(^|/)kustomization\\.ya?ml$/',
+    ],
+  },
+  packageRules: [
+    {
+      matchUpdateTypes: [
+        'minor',
+        'patch',
+      ],
+      matchManagers: [
+        'helm-values',
+        'kubernetes',
+        'kustomize',
+        'argocd',
+      ],
+      automerge: true,
+      automergeType: 'branch',
+    },
+    {
+      matchUpdateTypes: [
+        'major',
+      ],
+      matchManagers: [
+        'helm-values',
+        'kubernetes',
+        'kustomize',
+        'argocd',
+      ],
+      automerge: false,
+      prCreation: 'immediate',
+    },
+  ],
+  ignorePaths: [
+    '**/charts/**',
+  ],
+}
