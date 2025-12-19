@@ -5,6 +5,7 @@ no-autoupdate: true
 # Enhanced logging configuration
 loglevel: debug # Increased log level for more details
 transport-loglevel: debug
+protocol: http2
 ingress:
   - hostname: "*.ejsadiarin.com"
     service: https://cilium-gateway-gateway-external.gateway.svc.cluster.local:443
