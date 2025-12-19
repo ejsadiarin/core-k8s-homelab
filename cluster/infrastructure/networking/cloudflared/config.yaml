@@ -7,10 +7,13 @@ loglevel: debug # Increased log level for more details
 transport-loglevel: debug
 ingress:
   - hostname: "*.ejsadiarin.com"
-    service: https://cilium-gateway-gateway-external.gateway.svc.cluster.local:443
+    # service: https://cilium-gateway-gateway-external.gateway.svc.cluster.local:443
+    # originRequest:
+    #   noTLSVerify: true
+    #   originServerName: "*.ejsadiarin.com"
+    #   logHeaders: true
+    service: http://cilium-gateway-gateway-external.gateway.svc.cluster.local:80
     originRequest:
-      noTLSVerify: true
-      originServerName: "*.ejsadiarin.com"
       logHeaders: true
       headers:
         - name: CF-Connecting-IP
@@ -36,10 +39,8 @@ ingress:
         - name: CF-Challenge
         - name: CF-Bot-Management-Tag
   - hostname: ejsadiarin.com
-    service: https://cilium-gateway-gateway-external.gateway.svc.cluster.local:443
+    service: http://cilium-gateway-gateway-external.gateway.svc.cluster.local:80
     originRequest:
-      noTLSVerify: true
-      originServerName: ejsadiarin.com
       logHeaders: true
       headers:
         - name: CF-Connecting-IP

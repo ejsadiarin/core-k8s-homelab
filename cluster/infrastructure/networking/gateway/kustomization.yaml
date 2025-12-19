@@ -9,6 +9,7 @@ resources:
   - gw-external.yaml
   - gw-internal.yaml
   - cert-ejsadiarin.yaml
+  - http-to-https-redirect.yaml
 
 generatorOptions:
   disableNameSuffixHash: true
