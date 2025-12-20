@@ -9,4 +9,4 @@ resources:
   - pvc.yaml
   - httproute.yaml
 
-namespace: nginx-example
+namespace: nginx
