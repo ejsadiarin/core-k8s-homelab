@@ -41,7 +41,7 @@ spec:
           args:
             - |
               # Replace DB_PASSWORD placeholder with actual environment variable
-              sed "s/DB_PASSWORD/$DB_PASSWORD/g" /etc/dendrite-template/dendrite.yaml > /etc/dendrite/dendrite.yaml
+              sed "s#DB_PASSWORD#$DB_PASSWORD#g" /etc/dendrite-template/dendrite.yaml > /etc/dendrite/dendrite.yaml
           env:
             - name: DB_PASSWORD
               valueFrom:
