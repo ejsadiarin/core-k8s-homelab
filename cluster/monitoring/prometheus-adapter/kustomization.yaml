@@ -9,6 +9,19 @@ helmCharts:
     version: 5.2.0 # Latest stable
     releaseName: prometheus-adapter
     namespace: kube-prometheus-stack
+    valuesFile: values.yaml
+    includeCRDs: true
 
 commonAnnotations:
   argocd.argoproj.io/sync-wave: "2" # Deploy after Prometheus is ready
+
+patches:
+  - target:
+      group: apiregistration.k8s.io
+      version: v1beta1
+      kind: APIService
+      name: v1beta1.custom.metrics.k8s.io
+    patch: |-
+      - op: replace
+        path: /apiVersion
+        value: apiregistration.k8s.io/v1
