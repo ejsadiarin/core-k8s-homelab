@@ -9,8 +9,6 @@ helmCharts:
     version: 5.2.0 # Latest stable
     releaseName: prometheus-adapter
     namespace: kube-prometheus-stack
-    valuesFile: values.yaml
-    includeCRDs: true
 
 commonAnnotations:
   argocd.argoproj.io/sync-wave: "2" # Deploy after Prometheus is ready

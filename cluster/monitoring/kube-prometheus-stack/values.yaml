@@ -36,7 +36,7 @@ grafana:
     enabled: true
     storageClassName: longhorn
     accessModes:
-    - ReadWriteOnce
+      - ReadWriteOnce
     size: 1Gi
   service:
     type: ClusterIP
@@ -61,9 +61,9 @@ grafana:
         foldersFromFilesStructure: false
 
   additionalDataSources:
-  - name: Prometheus
-    type: prometheus
-    url: http://prometheus-operated.kube-prometheus-stack.svc:9090
+    - name: Prometheus
+      type: prometheus
+      url: http://prometheus-operated.kube-prometheus-stack.svc:9090
 
   dashboards:
     default:
@@ -99,7 +99,7 @@ prometheus:
       volumeClaimTemplate:
         spec:
           storageClassName: longhorn
-          accessModes: [ "ReadWriteOnce" ]
+          accessModes: ["ReadWriteOnce"]
           resources:
             requests:
               storage: 10Gi
@@ -120,7 +120,7 @@ alertmanager:
       volumeClaimTemplate:
         spec:
           storageClassName: longhorn
-          accessModes: [ "ReadWriteOnce" ]
+          accessModes: ["ReadWriteOnce"]
           resources:
             requests:
               storage: 512Mi
@@ -131,12 +131,12 @@ nodeExporter:
     kubernetes.io/arch: amd64
   # Fix: Disable problematic nfsd collector and add timeout handling
   extraArgs:
-  # Explicitly disable nfsd collector that's causing issues
-  - --no-collector.nfsd
-  # Add timeout handling for web requests
-  - --web.timeout=30s
-  # Reduce log verbosity for broken pipe errors  
-  - --log.level=warn
+    # Explicitly disable nfsd collector that's causing issues
+    - --no-collector.nfsd
+    # Add timeout handling for web requests
+    - --web.timeout=30s
+    # Reduce log verbosity for broken pipe errors  
+    - --log.level=warn
   resources:
     limits:
       cpu: 50m
@@ -156,3 +156,4 @@ kubeStateMetrics:
     requests:
       cpu: 50m
       memory: 64Mi
+
