@@ -1,0 +1,21 @@
+auth:
+  username: dendrite
+  database: dendrite
+  existingSecret: dendrite-db-secret
+  secretKeys:
+    adminPasswordKey: password
+
+primary:
+  persistence:
+    enabled: true
+    storageClass: longhorn
+    size: 5Gi
+  resources:
+    limits:
+      memory: 256Mi
+    requests:
+      cpu: 10m
+      memory: 128Mi
+
+volumePermissions:
+  enabled: true

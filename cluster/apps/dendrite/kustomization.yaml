@@ -1,0 +1,25 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: dendrite
+
+resources:
+  - ns.yaml
+  - deployment.yaml
+  - service.yaml
+  - pvc.yaml
+  - httproute.yaml
+  - sealed-secret.yaml
+
+configMapGenerator:
+  - name: dendrite-config
+    files:
+      - dendrite.yaml=dendrite-config.yaml
+
+helmCharts:
+  - name: postgresql
+    repo: https://charts.bitnami.com/bitnami
+    version: 14.2.3
+    releaseName: dendrite
+    namespace: dendrite
+    valuesFile: postgres-values.yaml

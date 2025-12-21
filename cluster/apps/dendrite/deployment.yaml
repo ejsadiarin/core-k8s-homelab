@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dendrite
+  namespace: dendrite
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dendrite
+  template:
+    metadata:
+      labels:
+        app: dendrite
+    spec:
+      containers:
+        - name: dendrite
+          image: matrixdotorg/dendrite:latest
+          args:
+            - "-config"
+            - "/etc/dendrite/dendrite.yaml"
+            - "-tls-cert"
+            - ""
+            - "-tls-key"
+            - ""
+          ports:
+            - containerPort: 8008
+              name: http
+          volumeMounts:
+            - name: config-writable
+              mountPath: /etc/dendrite/
+            - name: keys
+              mountPath: /etc/dendrite/matrix_key.pem
+              subPath: matrix_key.pem
+            - name: jetstream
+              mountPath: /var/dendrite/jetstream
+      initContainers:
+        - name: generate-config
+          image: busybox:latest
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              # Replace DB_PASSWORD placeholder with actual environment variable
+              sed "s/DB_PASSWORD/$DB_PASSWORD/g" /etc/dendrite-template/dendrite.yaml > /etc/dendrite/dendrite.yaml
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: dendrite-db-secret
+                  key: password
+          volumeMounts:
+            - name: config-template
+              mountPath: /etc/dendrite-template
+            - name: config-writable
+              mountPath: /etc/dendrite
+        - name: generate-keys
+          image: matrixdotorg/dendrite:latest
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              if [ ! -f /etc/dendrite/matrix_key.pem ]; then
+                /usr/bin/generate-keys -private-key /etc/dendrite/matrix_key.pem
+              fi
+          volumeMounts:
+            - name: keys
+              mountPath: /etc/dendrite/
+      volumes:
+        - name: config-template
+          configMap:
+            name: dendrite-config
+        - name: config-writable
+          emptyDir: {}
+        - name: keys
+          persistentVolumeClaim:
+            claimName: dendrite-keys
+        - name: jetstream
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dendrite
+  namespace: dendrite
+spec:
+  selector:
+    app: dendrite
+  ports:
+    - protocol: TCP
+      port: 8008
+      targetPort: 8008
+      name: http

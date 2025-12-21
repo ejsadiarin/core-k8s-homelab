@@ -5,17 +5,17 @@ metadata:
   namespace: longhorn
 spec:
   parentRefs:
-    - name: gateway-internal # Assuming you have an internal gateway, adjust if needed
-      namespace: gateway # Assuming your gateway is in the 'gateway' namespace
+    - name: gateway-internal
+      namespace: gateway
   hostnames:
-    - "longhorn.int.ejsadiarin.com" # You can change this hostname
+    - "longhorn.int.ejsadiarin.com"
   rules:
     - matches:
         - path:
             type: PathPrefix
             value: /
       backendRefs:
-        - name: longhorn-frontend # Default Longhorn UI service name
+        - name: longhorn-frontend # default Longhorn UI service name
           namespace: longhorn
-          port: 80 # Default Longhorn UI port
+          port: 80 # default port
           weight: 1
