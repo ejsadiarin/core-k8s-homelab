@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: dendrite
-          image: matrixdotorg/dendrite:latest
+          image: ghcr.io/element-hq/dendrite-monolith:latest
           args:
             - "-config"
             - "/etc/dendrite/dendrite.yaml"
@@ -54,7 +54,7 @@ spec:
             - name: config-writable
               mountPath: /etc/dendrite
         - name: generate-keys
-          image: matrixdotorg/dendrite:latest
+          image: ghcr.io/element-hq/dendrite-monolith:latest
           command: ["/bin/sh", "-c"]
           args:
             - |
