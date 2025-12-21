@@ -2,6 +2,11 @@ configs:
   cm:
     create: true
     application.resourceTrackingMethod: "annotation+label"
+    resource.customizations: |
+      gateway.networking.k8s.io/HTTPRoute:
+        ignoreDifferences: |
+          jsonPointers:
+          - /status
   cmp:
     create: true
     plugins:
