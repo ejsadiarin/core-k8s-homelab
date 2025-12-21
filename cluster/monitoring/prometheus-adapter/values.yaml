@@ -1,0 +1,24 @@
+prometheus:
+  # The URL of your existing Prometheus service
+  url: http://prometheus-operated.kube-prometheus-stack.svc
+  port: 9090
+
+rules:
+  default: true # Enable default rules for CPU/Memory (kubectl top)
+  custom: []
+
+resources:
+  requests:
+    cpu: 10m
+    memory: 64Mi
+  limits:
+    cpu: 100m
+    memory: 128Mi
+
+# Use existing service account or create new one
+rbac:
+  create: true
+
+serviceAccount:
+  create: true
+  name: prometheus-adapter
