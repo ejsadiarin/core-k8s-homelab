@@ -1,15 +1,15 @@
 - Infrastructure:
     - Grafana:
         icon: grafana.png
-        href: https://grafana.ejsadiarin.com
+        href: https://grafana.int.ejsadiarin.com
         description: Monitoring Dashboards
     - Prometheus:
         icon: prometheus.png
-        href: https://prometheus.ejsadiarin.com
+        href: https://prometheus.int.ejsadiarin.com
         description: Metrics Explorer
     - Argo CD:
         icon: argocd.png
-        href: https://argocd.ejsadiarin.com
+        href: https://argocd.int.ejsadiarin.com
         description: GitOps Controller
 
 - Applications:
