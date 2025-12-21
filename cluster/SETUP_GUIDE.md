@@ -61,6 +61,11 @@ Now we install the tool that will manage everything else.
 # Gateway API CRDs (Crucial!)
 kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.4.0/standard-install.yaml
 
+# Sealed Secrets CRD (Prevent sync race conditions)
+helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets
+helm repo update
+helm show crds sealed-secrets/sealed-secrets --version 2.18.0 | kubectl apply -f -
+
 # Argo CD
 kubectl create namespace argocd
 kubectl kustomize --enable-helm cluster/infrastructure/controllers/argocd | kubectl apply -f - 
