@@ -11,6 +11,7 @@ spec:
   dnsNames:
     - "*.ejsadiarin.com"
     - ejsadiarin.com
+    - "*.int.ejsadiarin.com"
   issuerRef:
     group: cert-manager.io
     kind: ClusterIssuer
