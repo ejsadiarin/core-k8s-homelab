@@ -1,0 +1,23 @@
+- Infrastructure:
+    - Grafana:
+        icon: grafana.png
+        href: https://grafana.ejsadiarin.com
+        description: Monitoring Dashboards
+    - Prometheus:
+        icon: prometheus.png
+        href: https://prometheus.ejsadiarin.com
+        description: Metrics Explorer
+    - Argo CD:
+        icon: argocd.png
+        href: https://argocd.ejsadiarin.com
+        description: GitOps Controller
+
+- Applications:
+    - Hello World:
+        icon: simple-icons:kubernetes
+        href: https://hello-world.ejsadiarin.com
+        description: Echo Server
+    - Nginx:
+        icon: nginx.png
+        href: https://nginx.ejsadiarin.com
+        description: Sample Web Server
