@@ -13,7 +13,7 @@ resources:
     memory: 64Mi
   limits:
     cpu: 100m
-    memory: 128Mi
+    memory: 256Mi
 
 # Use existing service account or create new one
 rbac:
