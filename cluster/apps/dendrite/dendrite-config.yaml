@@ -8,6 +8,7 @@ global:
       storage_path: /var/dendrite/jetstream
       
 media_api:
+  base_path: /var/dendrite/media
   database:
     connection_string: postgres://dendrite:${DB_PASSWORD}@dendrite-postgresql.dendrite.svc:5432/dendrite?sslmode=disable
 

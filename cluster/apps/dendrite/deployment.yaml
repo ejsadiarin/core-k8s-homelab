@@ -34,6 +34,8 @@ spec:
               subPath: matrix_key.pem
             - name: jetstream
               mountPath: /var/dendrite/jetstream
+            - name: media
+              mountPath: /var/dendrite/media
       initContainers:
         - name: generate-config
           image: alpine:latest
@@ -74,6 +76,8 @@ spec:
           persistentVolumeClaim:
             claimName: dendrite-keys
         - name: jetstream
+          emptyDir: {}
+        - name: media
           emptyDir: {}
 ---
 apiVersion: v1
