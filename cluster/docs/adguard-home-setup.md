@@ -12,13 +12,13 @@ This guide explains how to set up AdGuard Home as a local DNS server to handle i
 
 1. Create a new directory for your AdGuard Home setup:
 ```bash
-mkdir adguard-home
-cd adguard-home
+mkdir adguardhome
+cd adguardhome
 ```
 
 2. Create the following files in your directory:
 
-`docker-compose.yml`:
+`compose.yml`:
 ```yaml
 services:
   adguardhome:
@@ -34,6 +34,10 @@ services:
 ```
 
 `config/AdGuardHome.yaml`:
+
+> [!NOTE]
+> Make sure to name this as `config/AdGuardHome.yaml`
+
 ```yaml
 dns:
   bind_hosts:
@@ -62,6 +66,8 @@ dns:
 ```bash
 docker-compose up -d
 ```
+
+4. Go to `http://<HOST-IP-ADDRESS>:3000` and setup AdGuard Home installation
 
 ## Configuring Devices to Use AdGuard Home
 
