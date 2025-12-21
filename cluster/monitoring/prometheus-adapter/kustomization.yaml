@@ -3,6 +3,9 @@ kind: Kustomization
 
 namespace: kube-prometheus-stack
 
+resources:
+  - apiservice.yaml
+
 helmCharts:
   - name: prometheus-adapter
     repo: https://prometheus-community.github.io/helm-charts
