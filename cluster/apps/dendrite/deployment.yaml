@@ -36,12 +36,12 @@ spec:
               mountPath: /var/dendrite/jetstream
       initContainers:
         - name: generate-config
-          image: busybox:latest
+          image: alpine:latest
           command: ["/bin/sh", "-c"]
           args:
             - |
-              # Replace DB_PASSWORD placeholder with actual environment variable
-              sed "s#DB_PASSWORD#$DB_PASSWORD#g" /etc/dendrite-template/dendrite.yaml > /etc/dendrite/dendrite.yaml
+              apk add --no-cache gettext
+              envsubst < /etc/dendrite-template/dendrite.yaml > /etc/dendrite/dendrite.yaml
           env:
             - name: DB_PASSWORD
               valueFrom:
