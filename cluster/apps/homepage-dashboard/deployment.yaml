@@ -19,6 +19,15 @@ spec:
         runAsUser: 1000
         runAsGroup: 1000
         fsGroup: 1000
+      initContainers:
+      - name: init-config
+        image: busybox:latest
+        command: ['sh', '-c', 'cp /config-source/* /app/config/']
+        volumeMounts:
+        - name: config-source
+          mountPath: /config-source
+        - name: config
+          mountPath: /app/config
       containers:
       - name: homepage-dashboard
         image: ghcr.io/benphelps/homepage:latest
@@ -37,9 +46,11 @@ spec:
         - name: cache
           mountPath: /app/public/icons
       volumes:
-      - name: config
+      - name: config-source
         configMap:
           name: homepage-config
+      - name: config
+        emptyDir: {}
       - name: logs
         emptyDir: {}
       - name: cache
