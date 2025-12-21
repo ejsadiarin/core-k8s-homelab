@@ -20,7 +20,7 @@ primary:
 volumePermissions:
   enabled: true
   image:
-    tag: 12-debian-12-r32
+    tag: 12-debian-12-r33
 
 networkPolicy:
   enabled: false
