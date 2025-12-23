@@ -1,9 +1,0 @@
-{
-    "default_server_config": {
-        "m.homeserver": {
-            "base_url": "https://matrix.ejsadiarin.com",
-            "server_name": "ejsadiarin.com"
-        }
-    },
-    "show_labs_settings": true
-}
