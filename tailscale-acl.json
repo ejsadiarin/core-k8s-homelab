@@ -1,0 +1,320 @@
+{
+  // Declare static groups of users. Use autogroups for all users or users with a specific role.
+  "groups": {
+    // "group:example": ["alice@example.com", "bob@example.com"],
+    "group:admin": [
+      "ejsadiarin@github"
+    ],
+    // "group:guest": ["example@gmail.com"],
+  },
+  "autoApprovers": {
+    // exit nodes advertised by users who are Tailscale admins or devices tagged
+    // tag:application-exit-node will be automatically approved
+    "exitNode": [
+      "tag:main",
+      "group:admin"
+    ],
+    "routes": {
+      "10.42.0.0/16": [
+        "ejsadiarin@github"
+      ],
+    },
+  },
+  // Define the tags which can be applied to devices and by which users.
+  "tagOwners": {
+    "tag:main": [
+      "autogroup:admin",
+      "group:admin"
+    ],
+    "tag:server": [
+      "autogroup:admin",
+      "group:admin"
+    ],
+    "tag:exit-node": [
+      "autogroup:admin",
+      "group:admin"
+    ],
+    "tag:proxy": [
+      "autogroup:admin",
+      "group:admin"
+    ],
+    "tag:external": [
+      "autogroup:admin",
+      "group:admin"
+    ],
+    "tag:guest": [
+      "autogroup:admin",
+      "group:admin"
+    ],
+    "tag:controlplane": [
+      "autogroup:admin"
+    ],
+    "tag:worker": [
+      "autogroup:admin"
+    ],
+    "tag:admin": [
+      "ejsadiarin@github"
+    ],
+  },
+  // Define access control lists for users, groups, autogroups, tags,
+  // Tailscale IP addresses, and subnet ranges.
+  "acls": [
+    // KUBERNETES LOVER 69
+    {
+      "action": "accept",
+      "src": [
+        "tag:controlplane"
+      ],
+      "dst": [
+        "tag:worker"
+      ]
+    },
+    // --- Allow workers to reach control-plane only on the Kubernetes API port
+    {
+      "action": "accept",
+      "src": [
+        "tag:worker"
+      ],
+      "dst": [
+        "tag:controlplane:6443"
+      ]
+    },
+    // --- Allow workers to communicate among themselves (for CNI, service traffic)
+    {
+      "action": "accept",
+      "src": [
+        "tag:worker"
+      ],
+      "dst": [
+        "tag:worker"
+      ]
+    },
+    // --- Allow pod network traffic (10.42.0.0/16) to flow within itself
+    {
+      "action": "accept",
+      "src": [
+        "10.42.0.0/16"
+      ],
+      "dst": [
+        "10.42.0.0/16"
+      ]
+    },
+    // --- Allow cluster nodes (control-plane + workers) to reach the pod network
+    {
+      "action": "accept",
+      "src": [
+        "tag:controlplane",
+        "tag:worker"
+      ],
+      "dst": [
+        "10.42.0.0/16"
+      ]
+    },
+    // --- Allow your admin device to reach everything
+    {
+      "action": "accept",
+      "src": [
+        "tag:admin"
+      ],
+      "dst": [
+        "*"
+      ]
+    },
+    // Allow all connections.
+    // Comment this section out if you want to define specific restrictions.
+    // {"action": "accept", "src": ["*"], "dst": ["*:*"]},
+    // example (ref: https://www.reddit.com/r/Tailscale/comments/1jmyj13/comment/mkh46oz/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button)
+    {
+      "action": "accept",
+      "src": [
+        "tag:exit-node"
+      ],
+      "dst": [
+        "autogroup:internet:*"
+      ],
+    },
+    // {"action": "accept", "src": ["tag:main"], "dst": ["*:*"]},
+    // {"action": "accept", "src": ["tag:some-app"], "dst": ["10.10.6.200:*"],}, // subnet router
+    // {"action": "accept", "src": ["tag:some-computer"],	"dst": ["10.10.11.11:*", "100.117.xxx.xxx:*"],},
+    // ======= ADMIN ACL ======= //
+    // main admin can access all
+    {
+      "action": "accept",
+      "src": [
+        "autogroup:owner"
+      ],
+      "dst": [
+        "*:*"
+      ],
+    },
+    // admin can access proxy
+    {
+      "action": "accept",
+      "src": [
+        "autogroup:admin"
+      ],
+      "dst": [
+        "tag:proxy:*"
+      ],
+    },
+    {
+      "action": "accept",
+      "src": [
+        "group:admin"
+      ],
+      "dst": [
+        "tag:main:*"
+      ]
+    },
+    {
+      "action": "accept",
+      "src": [
+        "tag:main"
+      ],
+      "dst": [
+        "tag:main:*"
+      ]
+    },
+    {
+      "action": "accept",
+      "src": [
+        "tag:main"
+      ],
+      "dst": [
+        "tag:server:*"
+      ]
+    },
+    // ======= MEMBER ACL ======= //
+    // all can access their own devices (admin included ofc)
+    {
+      "action": "accept",
+      "src": [
+        "autogroup:member"
+      ],
+      "dst": [
+        "autogroup:self:*"
+      ],
+    },
+    // all members can use exit nodes
+    {
+      "action": "accept",
+      "src": [
+        "autogroup:member"
+      ],
+      "dst": [
+        "tag:exit-node:*"
+      ],
+    },
+    // all members can access external
+    {
+      "action": "accept",
+      "src": [
+        "autogroup:member"
+      ],
+      "dst": [
+        "tag:external:*"
+      ],
+    },
+    // all members can access their own devices
+    // {
+    // 	"action": "accept",
+    // 	"src":    ["autogroup:member", "autogroup:admin"],
+    // 	"dst":    ["tag:internet:*"],
+    // },
+    // Allow users in "group:example" to access "tag:example", but only from
+    // devices that are running macOS and have enabled Tailscale client auto-updating.
+    // {"action": "accept", "src": ["group:example"], "dst": ["tag:example:*"], "srcPosture":["posture:autoUpdateMac"]},
+  ],
+  // Define postures that will be applied to all rules without any specific
+  // srcPosture definition.
+  // "defaultSrcPosture": [
+  //      "posture:anyMac",
+  // ],
+  // Define device posture rules requiring devices to meet
+  // certain criteria to access parts of your system.
+  // "postures": {
+  //      // Require devices running macOS, a stable Tailscale
+  //      // version and auto update enabled for Tailscale.
+  // 	"posture:autoUpdateMac": [
+  // 	    "node:os == 'macos'",
+  // 	    "node:tsReleaseTrack == 'stable'",
+  // 	    "node:tsAutoUpdate",
+  // 	],
+  //      // Require devices running macOS and a stable
+  //      // Tailscale version.
+  // 	"posture:anyMac": [
+  // 	    "node:os == 'macos'",
+  // 	    "node:tsReleaseTrack == 'stable'",
+  // 	],
+  // },
+  // Define users and devices that can use Tailscale SSH.
+  "ssh": [
+    // Allow all users to SSH into their own devices in check mode.
+    // Comment this section out if you want to define specific restrictions.
+    {
+      "action": "check", // can be accept, check, or deny
+      "src": [
+        "autogroup:member"
+      ],
+      "dst": [
+        "autogroup:self"
+      ],
+      "users": [
+        "autogroup:nonroot",
+        "root"
+      ],
+      // "checkPeriod": "1m", // optional, default 12h
+    },
+    // admin accs, devices tagged "main" can access all servers (Virtual Machines)
+    {
+      "action": "accept",
+      "src": [
+        "group:admin",
+        "tag:main"
+      ],
+      "dst": [
+        "tag:server"
+      ],
+      "users": [
+        "autogroup:nonroot",
+        "root"
+      ],
+    },
+    // admin accounts can ssh to devices tagged "main"
+    {
+      "action": "accept",
+      "src": [
+        "group:admin"
+      ],
+      "dst": [
+        "tag:main"
+      ],
+      "users": [
+        "autogroup:nonroot",
+        "root"
+      ],
+    },
+    // devices tagged "main" can ssh to other devices tagged "main"
+    {
+      "action": "accept",
+      "src": [
+        "tag:main"
+      ],
+      "dst": [
+        "tag:main"
+      ],
+      "users": [
+        "autogroup:nonroot",
+        "root"
+      ],
+    },
+  ],
+  // Test access rules every time they're saved.
+  // "tests": [
+  //  	{
+  //  		"src": "alice@example.com",
+  //  		"accept": ["tag:example"],
+  //  		"deny": ["100.101.102.103:443"],
+  //  	},
+  // ],
+}

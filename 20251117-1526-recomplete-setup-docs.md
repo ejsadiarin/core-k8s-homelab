@@ -1,5 +1,9 @@
 ## Architecture
 
+* Tailscale for **node-to-node** communication
+* Cilium for **pod-to-pod** communication
+* Cloudflare Tunnel for public websites
+
 
 * Has private services -> `*.local.ejsadiarin.com`
 
@@ -16,19 +20,21 @@ Public Traffic -> Cloudflare Tunnel (cloudflared) -> Traefik -> Service
 ## Prerequisites
 
 - Tailscale
-  * Configure the following:
-    * auth key -> reusable, ephemeral
-    * ACL -> autoApprovers.routes
-    * *From k3s docs*: If you have ACLs activated in Tailscale, you need to add an "accept" rule to allow pods to communicate with each other. Assuming the auth key you created automatically tags the Tailscale nodes with the tag testing-k3s, the rule should look like this:
-      ```json
-      "acls": [
-        {
-          "action": "accept",
-          "src":    ["tag:testing-k3s", "10.42.0.0/16"],
-          "dst":    ["tag:testing-k3s:*", "10.42.0.0/16:*"],
-        },
-      ],
-      ```
+  * Here we use the `tailscale ip -4` for each node
+    * Install `tailscale` for each node -> Authenticate via `tailscale login`
+    * Get the IPv4 address of the node via `tailscale ip -4` (should be `100.X.X.X`)
+    * Configure ACL:
+      * ACL -> autoApprovers.routes
+      * *From k3s docs*: If you have ACLs activated in Tailscale, you need to add an "accept" rule to allow pods to communicate with each other. Assuming the auth key you created automatically tags the Tailscale nodes with the tag testing-k3s, the rule should look like this:
+        ```json
+        "acls": [
+          {
+            "action": "accept",
+            "src":    ["tag:testing-k3s", "10.42.0.0/16"],
+            "dst":    ["tag:testing-k3s:*", "10.42.0.0/16:*"],
+          },
+        ],
+        ```
 
 - Cloudflare
   * own DNS
@@ -37,28 +43,6 @@ Public Traffic -> Cloudflare Tunnel (cloudflared) -> Traefik -> Service
 ## Installation
 
 1. install using k3sup (see `initialize/` directory for scripts)
-
-- install k3s remotely using k3sup (controlplane)
-```bash
-k3sup install \
-  --ip 100.117.44.99 \
-  --user ejs \
-  --cluster \
-  --k3s-extra-args '--cluster-init --disable=traefik --disable=servicelb --write-kubeconfig-mode "644"' \
-  --ssh-key ~/.ssh/id_ed25519
-```
-
-- install k3s remotely using k3sup (agent)
-```bash
-k3sup join \
-  --ip 100.117.44.99 \
-  --user ejs \
-  --cluster \
-  --k3s-extra-args '--cluster-init --disable=traefik --disable=servicelb --write-kubeconfig-mode "644"' \
-  --ssh-key ~/.ssh/id_ed25519
-```
-
-* or
   * server/controlplane
     - on `first install`: for `--tls-san`, the VIP can be near the metallb pool (ex. 192.168.70.100-110 then VIP can be 192.168.70.99) 
       - `--tls-san` is a must for future HA setups
@@ -70,16 +54,22 @@ k3sup join \
     - get `joinKey` from Tailscale Dashboard -> Settings -> Keys -> Generate auth key...
 ```bash
 # server (controlplane) - first install
-curl -sfL https://get.k3s.io | \
-  INSTALL_K3S_EXEC="server \
-    --cluster-init \
-    --vpn-auth=name=tailscale,joinKey=<YOUR_TS_KEY> \
-    --tls-san <YOUR_VIP_IP_FOR_HA> \
-    --disable=traefik \
-    --disable=servicelb \
-    --write-kubeconfig-mode 644" \
-  sh -
+# Get your Tailscale IP
+TS_IP=$(tailscale ip -4)
 
+# Run the K3s installer with these flags
+curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC=" \
+    --flannel-backend=none \
+    --disable-kube-proxy \
+    --node-ip=${TS_IP} \
+    --bind-address=${TS_IP} \
+    --advertise-address=${TS_IP}" \
+    sh -
+```
+
+<!-- TODO: controlplane install with existing clusters already -->
+- TODO: controlplane install with existing clusters already
+```bash
 # server (controlplane) - has existing cluster already
 curl -sfL https://get.k3s.io | \
 K3S_URL=https://<IP_OF_YOUR_FIRST_SERVER>:6443 \
@@ -90,13 +80,41 @@ INSTALL_K3S_EXEC="server \
   --disable=traefik \
   --disable=servicelb" \
 sh -
-
-# agent
-curl -sfL https://get.k3s.io | K3S_URL=https://hostip:6443 K3S_TOKEN=nodetoken INSTALL_K3S_EXEC="agent --vpn-auth=name=tailscale,joinKey=tsauthkey-from-tailscale"  sh -
-curl -sfL https://get.k3s.io | K3S_URL=https://100.117.44.99:6443 K3S_TOKEN=K106d52f9108576357e7469ab53c4b8d931bd35ca6e1b9a0c22cb1b89384c98a1a6::server:6871faecac548f02dda8cadf767aee31 INSTALL_K3S_EXEC="agent --vpn-auth=name=tailscale,joinKey=tskey-auth-kmDePVzAVW11CNTRL-uquTmXEfEPWbmn236eVNPWGk6vsGszwb"  sh -
 ```
 
-2. Configure ArgoCD manifests (argocd-root-app.yaml & argocd-appset.yaml) 
+- agent installation
+```bash
+# agent
+# Get the agent's Tailscale IP
+TS_IP=$(tailscale ip -4)
+
+# Get your K3s server token (from the server node)
+K3S_TOKEN="YOUR_SERVER_TOKEN_HERE"
+
+# Get your server's Tailscale IP (from Step 2)
+SERVER_TS_IP="100.x.x.x"
+
+# Run the agent installer
+curl -sfL https://get.k3s.io | K3S_URL="https://{SERVER_TS_IP}:6443" \
+    K3S_TOKEN="${K3S_TOKEN}" \
+    INSTALL_K3S_EXEC=" \
+    --flannel-backend=none \
+    --disable-kube-proxy \
+    --node-ip=${TS_IP}" \
+    sh -
+```
+
+2. Install Cilium (CNI) - in `kube-system` namespace
+- This is our `flannel` and `kube-proxy` replacement
+- Must be installed before ArgoCD, so **one-time manual installation** is REQUIRED
+```bash
+helm install cilium cilium/cilium \
+   --namespace kube-system \
+   --set k3s.enabled=true \
+   --set kubeProxyReplacement=true
+```
+
+3. Configure ArgoCD manifests (argocd-root-app.yaml & argocd-appset.yaml) 
   - Install ArgoCD CRD 
   ```bash
   kubectl create namespace argocd
@@ -121,7 +139,7 @@ curl -sfL https://get.k3s.io | K3S_URL=https://100.117.44.99:6443 K3S_TOKEN=K106
   * Get password for user `admin`:
   ```bash
   # NOTE: we run base64 decode to get the actual password
-  kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data}" | base64 -d
+  kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.password}" | base64 -d
   ```
 
 

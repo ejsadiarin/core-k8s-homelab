@@ -33,8 +33,8 @@ http:
         # frameDeny: true
         browserXssFilter: true
         contentTypeNosniff: true
-        forceSTSHeader: true
         stsIncludeSubdomains: true
+        forceSTSHeader: true
         stsPreload: true
         stsSeconds: 15552000
         customFrameOptionsValue: SAMEORIGIN

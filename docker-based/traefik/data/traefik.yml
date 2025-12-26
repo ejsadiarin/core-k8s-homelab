@@ -1,3 +1,4 @@
+---
 api:
   # insecure: true
   dashboard: true
@@ -17,8 +18,8 @@ entryPoints:
         readTimeout: 600s
         idleTimeout: 600s
         writeTimeout: 600s
-  # gitea_ssh:
-  #   address: ":2221"
+        # gitea_ssh:
+        #   address: ":2221"
 serversTransport:
   insecureSkipVerify: true
 providers:
@@ -27,8 +28,8 @@ providers:
     exposedByDefault: false
   file:
     filename: /config.yml
-  #   directory: ./conf/
-  #   watch: true
+    #   directory: ./conf/
+    #   watch: true
 certificatesResolvers:
   cloudflare:
     acme:

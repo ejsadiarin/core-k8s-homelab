@@ -22,8 +22,8 @@ obsidian/config
 silverbullet/space
 
 kubeconfig
-*secret*.yaml
-*secret*.yml
+**/*/secret*.yaml
+**/*/secret*.yml
 *.env
 values-local.yaml
 values-local.yml

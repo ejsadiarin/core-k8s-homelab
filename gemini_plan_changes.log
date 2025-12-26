@@ -1,0 +1,164 @@
+# Log of Gemini Changes to plan.md (2025-12-14)
+
+---
+## Change 1: Update Architecture Decisions for Tailscale Hybrid Setup
+
+### `Network Transport`
+- **Old:** `Network Transport: **Physical LAN** (Standard TCP/IP).`
+- **New:** `Network Transport: **Tailscale** (Mesh VPN).`
+
+### `Network Transport - Change/Access`
+- **Old:** 
+    ```
+    *   *Change:* We are **not** running the cluster overlay on top of Tailscale mesh to avoid MTU/Checksum issues.
+    *   *Access:* Private access to services will be handled by the **Tailscale Kubernetes Operator** (services get their own Tailscale IPs).
+    ```
+- **New:**
+    ```
+    *   *Reason:* Essential for connecting Home (NAT) and Cloud nodes securely.
+    *   *Config:* We will apply specific MTU and Masquerade settings to prevent conflicts.
+    ```
+
+### `Kubernetes Core - CNI - Mode/Feature/L2 Announcement`
+- **Old:** 
+    ```
+    *   **CNI (Networking):** **Cilium**
+        *   *Mode:* Kube-proxy replacement enabled.
+        *   *Feature:* **Gateway API** enabled (for public ingress via Cloudflare).
+        *   *L2 Announcement:* Enabled (Standard LAN L2) for local load balancing if needed.
+    ```
+- **New:**
+    ```
+    *   **CNI (Networking):** **Cilium**
+        *   *Mode:* Encapsulation (VXLAN/Geneve) over Tailscale.
+        *   *Critical Settings:* `mtu=1200` (to fit in tunnel), `masquerade=false` (to avoid NAT conflict).
+    ```
+
+---
+## Change 2: Update K3s Server Installation in Phase 2
+
+### `Install K3s Server (Control Plane)` - Command Block
+- **Old `curl` command:**
+    ```bash
+    curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server \
+      --flannel-backend=none \
+      --disable-kube-proxy \
+      --disable=traefik \
+      --disable=servicelb \
+      --node-ip=192.168.10.171 \
+      --advertise-address=192.168.10.171 \
+      --tls-san=192.168.70.99" sh -
+    ```
+- **New `curl` command:**
+    ```bash
+    # Get your Tailscale IP
+    TS_IP=$(tailscale ip -4)
+
+    curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server \
+      --flannel-backend=none \
+      --disable-kube-proxy \
+      --disable=traefik \
+      --disable=servicelb \
+      --node-ip=${TS_IP} \
+      --advertise-address=${TS_IP} \
+      --tls-san=<FUTURE_HA_VIP>" sh -
+    ```
+
+### `Install K3s Server (Control Plane)` - Kubeconfig Note
+- **Old:**
+    ```
+    *  After installation, your `kubeconfig` can be found at `/etc/rancher/k3s/k3s.yaml` on the control plane node. You can copy this to your local machine (and adjust the server IP to the node's LAN IP if needed) to interact with the cluster remotely.
+    1.1. *Make sure to remove any old `kubeconfig` or `config` files in `~/.kube` on your local machine.**
+    1.2. **Do this on your local machine:** `mkdir -p ~/.kube && scp <USER>@<SERVER_LAN_IP>:/etc/rancher/k3s/k3s.yaml ~/.kube/config && chmod 600 ~/.kube/config` (adjust `scp` if you prefer to copy it another way). 
+    1.3. Then edit `~/.kube/config` to change `localhost` or `127.0.0.1` to `<SERVER_LAN_IP>`.
+    ```
+- **New:**
+    ```
+    *   *Kubeconfig Location:* `/etc/rancher/k3s/k3s.yaml`. Copy this to your local machine.
+        *   **Local Setup:** `mkdir -p ~/.kube && scp <USER>@<SERVER_TS_IP>:/etc/rancher/k3s/k3s.yaml ~/.kube/config && chmod 600 ~/.kube/config`. Edit `~/.kube/config` and replace `127.0.0.1` with the Server's Tailscale IP.
+    ```
+    *(Note: The `<SERVER_LAN_IP>` placeholder was updated to `<SERVER_TS_IP>`.)*
+
+---
+## Change 3: Update K3s Agent Installation in Phase 2
+
+### `Install K3s Agent (Worker)` - Command Block
+- **Old `curl` command:**
+    ```bash
+    curl -L https://get.k3s.io | K3S_URL="https://<SERVER_LAN_IP>:6443" K3S_TOKEN="<PASTE_YOUR_K3S_TOKEN_HERE>" INSTALL_K3S_EXEC="agent --node-ip=<WORKER_LAN_IP>" sh -s - 
+    ```
+- **New `curl` command:**
+    ```bash
+    # Get Cloud Node's Tailscale IP
+    TS_IP=$(tailscale ip -4)
+    
+    curl -L https://get.k3s.io | K3S_URL="https://<SERVER_TS_IP>:6443" K3S_TOKEN="<PASTE_YOUR_K3S_TOKEN_HERE>" INSTALL_K3S_EXEC="agent \
+      --node-ip=${TS_IP}" sh -s - 
+    ```
+
+---
+## Change 4: Update Cilium Installation in Phase 2
+
+### `Install Cilium CLI & Chart` - Command Block
+- **Old `helm install` command:**
+    ```bash
+    helm install cilium cilium/cilium \
+       --namespace kube-system \
+       --version 1.18.4 \
+       --set k3s.enabled=true \
+       --set kubeProxyReplacement=true \
+       --set k8sServiceHost=<SERVER_LAN_IP> \
+       --set k8sServicePort=6443 \
+       --set ipam.mode=kubernetes \
+       --set gatewayAPI.enabled=true \
+       --set hubble.enabled=true \
+       --set hubble.relay.enabled=true \
+       --set hubble.ui.enabled=true
+    ```
+- **New `helm install` command:**
+    ```bash
+    helm install cilium cilium/cilium \
+       --namespace kube-system \
+       --version 1.18.4 \
+       --set k3s.enabled=true \
+       --set kubeProxyReplacement=true \
+       --set k8sServiceHost=<SERVER_TS_IP> \
+       --set k8sServicePort=6443 \
+       --set ipam.mode=kubernetes \
+       --set gatewayAPI.enabled=true \
+       --set devices=tailscale0 \
+       --set mtu=1200 \
+       --set bpf.masquerade=false \
+       --set enableIPv4Masquerade=false \
+       --set hubble.enabled=true \
+       --set hubble.relay.enabled=true \
+       --set hubble.ui.enabled=true
+    ```
+
+---
+## Change 5: Update Phase 3 GitOps Initialization
+
+### `Apply Root App` - Note
+- **Old:** (No Note)
+- **New:** 
+    ```
+    *   *Note:* You must update `cluster/core/cilium/app.yaml` in your git repo to match the "Golden Config" flags above (mtu: 1200, devices: tailscale0, etc.) so ArgoCD doesn't revert them!
+    ```
+
+---
+## Change 6: Pivot to Single-Node LAN Architecture (2025-12-14)
+
+### Architecture Decisions
+- **Nodes:** Changed to "1 (Single Node Cluster)".
+- **Network Transport:** Changed to "Standard Host Network (Physical IP)".
+- **Cilium:** Removed Tailscale config/MTU settings. Reverted to standard "strict" kube-proxy replacement.
+
+### Phase 2: Cluster Bootstrap
+- **Server:** Updated command to use `<HOST_IP>` (Physical IP).
+- **Agent:** Removed Step 2 (Agent Installation) entirely as this is now a single-node setup.
+- **Cilium:** Reverted Helm command to standard install (removed `devices`, `mtu`, `masquerade` flags).
+
+### Todo List
+- Updated to reflect Single Node installation.
+
+```
