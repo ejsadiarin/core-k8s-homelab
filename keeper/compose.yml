@@ -1,4 +1,3 @@
----
 services:
   postgres:
     image: postgres:17
@@ -15,7 +14,7 @@ services:
       retries: 5
     networks:
       - proxy
-      - keeper-network
+      # - keeper-network
 
   redis:
     image: redis:7-alpine
@@ -28,20 +27,25 @@ services:
       retries: 5
     networks:
       - proxy
-      - keeper-network
+      # - keeper-network
 
-  keeper:
-    image: ghcr.io/ridafkih/keeper-services:latest
+  api:
+    image: ghcr.io/ridafkih/keeper-api:latest
     environment:
+      API_PORT: 3001
       DATABASE_URL: ${DATABASE_URL}
       REDIS_URL: ${REDIS_URL}
       WEBSOCKET_URL: ${WEBSOCKET_URL}
       BETTER_AUTH_URL: ${BETTER_AUTH_URL}
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
       ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      COMMERCIAL_MODE: false
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      MICROSOFT_CLIENT_ID: ${MICROSOFT_CLIENT_ID:-}
+      MICROSOFT_CLIENT_SECRET: ${MICROSOFT_CLIENT_SECRET:-}
     # ports:
-    #   - "3000:3000"
-    #   - "3001:3001"
+    #   - "30010:3001"
     depends_on:
       postgres:
         condition: service_healthy
@@ -49,19 +53,59 @@ services:
         condition: service_healthy
     networks:
       - proxy
-      - keeper-network
+      # - keeper-network
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.keeper.rule=Host(`keeper.local.ejsadiarin.com`)"
-      - "traefik.http.routers.keeper.entrypoints=https"
-      - "traefik.http.routers.keeper.tls=true"
-      - "traefik.http.services.keeper.loadbalancer.server.port=3000"
+      - "traefik.http.routers.keeper-api.rule=Host(`keeper-api.local.ejsadiarin.com`)"
+      - "traefik.http.routers.keeper-api.entrypoints=https"
+      - "traefik.http.routers.keeper-api.tls=true"
+      - "traefik.http.routers.keeper-api.service=keeper-api"
+      - "traefik.http.services.keeper-api.loadbalancer.server.port=3001"
+
+  cron:
+    image: ghcr.io/ridafkih/keeper-cron:latest
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      MICROSOFT_CLIENT_ID: ${MICROSOFT_CLIENT_ID:-}
+      MICROSOFT_CLIENT_SECRET: ${MICROSOFT_CLIENT_SECRET:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - proxy
+      # - keeper-network
+
+  web:
+    image: ghcr.io/ridafkih/keeper-web:latest
+    environment:
+      API_URL: ${API_URL}
+    # ports:
+    #   - "30007:3000"
+    depends_on:
+      api:
+        condition: service_started
+    networks:
+      - proxy
+      # - keeper-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.keeper-web.rule=Host(`keeper.local.ejsadiarin.com`)"
+      - "traefik.http.routers.keeper-web.entrypoints=https"
+      - "traefik.http.routers.keeper-web.tls=true"
+      - "traefik.http.routers.keeper-web.service=keeper-web"
+      - "traefik.http.services.keeper-web.loadbalancer.server.port=3000"
 
 volumes:
   keeper-postgres-data:
   keeper-redis-data:
 
 networks:
-  keeper-network:
+  # keeper-network:
   proxy:
     external: true
