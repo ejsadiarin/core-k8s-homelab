@@ -20,3 +20,6 @@ fireflyiii/firefly_iii_db
 fireflyiii/.db.env
 obsidian/config
 silverbullet/space
+adguardhome/config
+authentik/backups
+gitea/backups
