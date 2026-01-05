@@ -1,4 +1,3 @@
----
 # server:
 #   assets-path: /app/assets
 
@@ -17,13 +16,15 @@ pages:
           - type: twitch-channels
             channels:
               - theprimeagen
+              - tsoding
+              - mooda
+              - s0mcs
+              - shanks_ttv
+              - tbanj
               - necros
               - whyAndr3w
               - timthetatman
-              - mooda
-              - themainmanswe
               - loltyler1
-              - tsoding
               - teej_dv
               - melkey
               - bogur
@@ -32,9 +33,7 @@ pages:
               - sinatraa
               - razziebinx
               - caseoh_
-              - RDCgaming
               - tarik
-              - togglebit
               - jinnytty
 
           - type: lobsters
@@ -109,23 +108,25 @@ pages:
             widgets:
               - subreddit: ExperiencedDevs
                 !!merge <<: *shared-properties
+              - subreddit: golang
+                !!merge <<: *shared-properties
+              - subreddit: backend
+                !!merge <<: *shared-properties
               - subreddit: learnprogramming
-                !!merge <<: *shared-properties
-              - subreddit: javahelp
-                !!merge <<: *shared-properties
-              - subreddit: java
-                !!merge <<: *shared-properties
-              - subreddit: aws
                 !!merge <<: *shared-properties
               - subreddit: devops
                 !!merge <<: *shared-properties
               - subreddit: kubernetes
                 !!merge <<: *shared-properties
-              - subreddit: dataengineering
-                !!merge <<: *shared-properties
-              - subreddit: golang
-                !!merge <<: *shared-properties
               - subreddit: linux
+                !!merge <<: *shared-properties
+              - subreddit: leetcode
+                !!merge <<: *shared-properties
+              - subreddit: java
+                !!merge <<: *shared-properties
+              - subreddit: aws
+                !!merge <<: *shared-properties
+              - subreddit: dataengineering
                 !!merge <<: *shared-properties
 
           - type: group
