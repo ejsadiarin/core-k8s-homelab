@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: glance
+  namespace: glance
+  labels:
+    app: glance
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: glance
+  template:
+    metadata:
+      labels:
+        app: glance
+    spec:
+      containers:
+        - name: glance
+          # [FIXED] Correct image name
+          image: glanceapp/glance:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 200m # [INFO] kBumped slightly to be safe during startup
+              memory: 256Mi # [INFO] Bumped slightly
+          ports:
+            - containerPort: 8080 # [FIXED] Glance listens on 8080
+              name: http
+
+          # [FIXED] Probes now point to 8080
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
+          volumeMounts:
+            - name: localtime
+              mountPath: /etc/localtime
+              readOnly: true
+            # [ADDED] Configuration mount
+            - name: glance-config
+              mountPath: /app/config/glance.yml
+              subPath: glance.yml
+
+      volumes:
+        - name: localtime
+          hostPath:
+            path: /usr/share/zoneinfo/Asia/Singapore
+        # [ADDED] You need a ConfigMap named 'glance-config' containing glance.yml
+        - name: glance-config
+          configMap:
+            name: glance-config

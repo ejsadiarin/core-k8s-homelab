@@ -1,0 +1,333 @@
+# server:
+#   assets-path: /app/assets
+
+theme:
+  background-color: 50 1 6
+  primary-color: 24 97 58
+  negative-color: 209 88 54
+
+pages:
+  - name: Home
+    columns:
+      - size: small
+        widgets:
+          - type: calendar
+
+          - type: twitch-channels
+            channels:
+              - theprimeagen
+              - tsoding
+              - mooda
+              - s0mcs
+              - shanks_ttv
+              - tbanj
+              - necros
+              - whyAndr3w
+              - timthetatman
+              - loltyler1
+              - teej_dv
+              - melkey
+              - bogur
+              - tenz
+              - t2sde
+              - sinatraa
+              - razziebinx
+              - caseoh_
+              - tarik
+              - jinnytty
+
+          - type: lobsters
+            sort-by: hot
+            tags:
+              - go
+              - linux
+              - compsci
+              - security
+              - programming
+              - ai
+              - distributed
+              - networking
+              - osdev
+              - event
+              - release
+              - api
+              - devops
+              - performance
+            limit: 15
+            collapse-after: 8
+
+      - size: full
+        widgets:
+          - type: monitor
+            cache: 1m
+            title: Services
+            sites:
+              - title: Immich
+                url: https://immich.local.ejsadiarin.com
+                icon: di:immich
+              - title: Gitea
+                url: https://gitea.local.ejsadiarin.com
+                icon: di:gitea
+              - title: Portainer
+                url: https://portainer.local.ejsadiarin.com
+                icon: di:portainer
+              - title: Ntfy
+                url: https://ntfy.local.ejsadiarin.com
+                icon: di:ntfy
+              - title: Uptime Kuma
+                url: https://uptime-kuma.local.ejsadiarin.com
+                icon: di:uptime-kuma
+              - title: Authentik
+                url: https://auth.local.ejsadiarin.com
+                icon: di:authentik
+              - title: Beszel
+                url: https://beszel.local.ejsadiarin.com
+                icon: di:beszel
+              - title: Vaultwarden
+                url: https://vaultwarden.local.ejsadiarin.com
+                icon: si:vaultwarden
+              - title: Traefik
+                url: https://traefik-dashboard.local.ejsadiarin.com
+                icon: di:traefik
+                alt-status-codes:
+                  - 401
+                  - 403
+                  # - title: AdGuard Home
+                  #   url: https://adguard.ejsadiarin.com
+                  #   icon: /assets/adguard-logo.png
+                  # - title: Vaultwarden
+                  #   url: https://vault.ejsadiarin.com
+                  #   icon: /assets/vaultwarden-logo.png
+
+          - type: group
+            define: &shared-properties
+              type: reddit
+              show-thumbnails: true
+              style: vertical-list
+              show-flairs: true
+            widgets:
+              - subreddit: ExperiencedDevs
+                !!merge <<: *shared-properties
+              - subreddit: golang
+                !!merge <<: *shared-properties
+              - subreddit: backend
+                !!merge <<: *shared-properties
+              - subreddit: learnprogramming
+                !!merge <<: *shared-properties
+              - subreddit: devops
+                !!merge <<: *shared-properties
+              - subreddit: kubernetes
+                !!merge <<: *shared-properties
+              - subreddit: linux
+                !!merge <<: *shared-properties
+              - subreddit: leetcode
+                !!merge <<: *shared-properties
+              - subreddit: java
+                !!merge <<: *shared-properties
+              - subreddit: aws
+                !!merge <<: *shared-properties
+              - subreddit: dataengineering
+                !!merge <<: *shared-properties
+
+          - type: group
+            widgets:
+              - type: videos
+                title: Nephis
+                limit: 8
+                style: grid-cards
+                channels:
+                  - UCdhPlZcpEqlVFIRuk4W5u8g # Nephis
+              - type: videos
+                title: Data with Zach
+                limit: 8
+                style: grid-cards
+                channels:
+                  - UCAq9f7jFEA7Mtl3qOZy2h1A # Data with Zach
+              - type: videos
+                title: Hello SWE
+                limit: 8
+                style: grid-cards
+                channels:
+                  - UC3kf-QFT6FZzDk9JsPg8Svg # Hello SWE
+              - type: videos
+                title: Core Dumped
+                limit: 8
+                style: grid-cards
+                channels:
+                  - UCGKEMK3s-ZPbjVOIuAV8clQ # Core Dumped
+              - type: videos
+                title: Muse Asia
+                limit: 20
+                style: horizontal-cards
+                channels:
+                  - UCGbshtvS9t-8CW11W7TooQg # Muse Asia
+              - type: videos
+                title: ThePrimeTime
+                limit: 8
+                style: grid-cards
+                channels:
+                  - UCUyeluBRhGPCW4rPe_UvBZQ # ThePrimeTime
+              - type: videos
+                title: Tsoding
+                limit: 8
+                style: grid-cards
+                channels:
+                  - UCrqM0Ym_NbK1fqeQG2VIohg # Tsoding/TsodingDaily
+              - type: videos
+                title: Fireship
+                limit: 8
+                style: grid-cards
+                channels:
+                  - UCsBjURrPoezykLs9EqgamOA # Fireship
+
+          - type: group
+            define: &shared-properties
+              type: reddit
+              show-thumbnails: true
+              style: horizontal-cards
+              show-flairs: true
+            widgets:
+              - subreddit: selfhosted
+                !!merge <<: *shared-properties
+              - subreddit: twice
+                !!merge <<: *shared-properties
+              - subreddit: neovim
+                !!merge <<: *shared-properties
+              - subreddit: anime
+                !!merge <<: *shared-properties
+              - subreddit: homelab
+                !!merge <<: *shared-properties
+              - subreddit: tea
+                !!merge <<: *shared-properties
+              - subreddit: unixporn
+                !!merge <<: *shared-properties
+              - subreddit: AskReddit
+                !!merge <<: *shared-properties
+
+          # - type: videos
+          #   limit: 25
+          #   style: horizontal-cards
+          #   channels:
+          #     - UCGbshtvS9t-8CW11W7TooQg # Muse Asia
+          #     - UCUyeluBRhGPCW4rPe_UvBZQ # ThePrimeTime
+          #     - UCGKEMK3s-ZPbjVOIuAV8clQ # Core Dumped
+          #     - UCsBjURrPoezykLs9EqgamOA # Fireship
+          #     - UCdhPlZcpEqlVFIRuk4W5u8g # Nephis
+
+          - type: rss
+            title: RSS
+            style: vertical-list
+            feeds:
+              - url: https://selfh.st/rss/
+                title: selfh.st
+
+      - size: small
+        widgets:
+          - type: weather
+            location: Bacoor, Philippines
+
+          - type: releases
+            show-source-icon: true
+            repositories:
+              - immich-app/immich
+              - ejsadiarin/dotfiles
+              - glanceapp/glance
+              - ReVanced/revanced-patches
+              # - codeberg:redict/redict
+              # - gitlab:fdroid/fdroidclient
+              # - dockerhub:gotify/server
+
+          - type: server-stats
+            servers:
+              - type: local
+                name: Homelab
+
+          - type: markets
+            markets:
+              - symbol: SPY
+                name: S&P 500
+              - symbol: BTC-USD
+                name: Bitcoin
+              - symbol: NVDA
+                name: NVIDIA
+              - symbol: AAPL
+                name: Apple
+              - symbol: MSFT
+                name: Microsoft
+              - symbol: GOOGL
+                name: Google
+              - symbol: AMD
+                name: AMD
+              - symbol: RDDT
+                name: Reddit
+
+  - name: News
+    columns:
+      - size: small
+        widgets:
+          - type: clock
+            hour-format: 12h
+            timezones:
+              - timezone: Europe/Paris
+                label: Paris
+              - timezone: America/New_York
+                label: New York
+              - timezone: Asia/Tokyo
+                label: Tokyo
+              - timezone: Asia/Seoul
+                label: South Korea
+              - timezone: Australia/Sydney
+                label: Australia
+
+          - type: releases
+            show-source-icon: true
+            repositories:
+              - immich-app/immich
+              - ejsadiarin/dotfiles
+              - glanceapp/glance
+              - ReVanced/revanced-patches
+              # - codeberg:redict/redict
+              # - gitlab:fdroid/fdroidclient
+              # - dockerhub:gotify/server
+
+      - size: full
+        widgets:
+          - type: hacker-news
+            limit: 20
+            collapse-after: 10
+
+      - size: full
+        widgets:
+          - type: lobsters
+            limit: 20
+            collapse-after: 10
+            sort-by: hot
+            tags:
+              - databases
+              - plt
+              - distributed
+              - scaling
+              - go
+              - linux
+              - compsci
+              - security
+              - programming
+              - ai
+              - networking
+              - osdev
+              - vim
+              - event
+              - release
+              - api
+              - devops
+              - performance
+
+  - name: Stats
+    columns:
+      - size: full
+        widgets:
+          - type: iframe
+            title: Homelab Status
+            source: https://beszel.local.ejsadiarin.com/system/homelab
+            height: 800
+
