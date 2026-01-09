@@ -51,7 +51,7 @@ spec:
             # [ADDED] Configuration mount
             - name: glance-config
               mountPath: /app/glance.yml
-              subPath: glance.yaml
+              subPath: glance.yml
 
       volumes:
         - name: localtime
