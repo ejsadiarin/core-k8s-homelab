@@ -50,7 +50,7 @@ spec:
               readOnly: true
             # [ADDED] Configuration mount
             - name: glance-config
-              mountPath: /app/config/glance.yaml
+              mountPath: /app/glance.yml
               subPath: glance.yaml
 
       volumes:
