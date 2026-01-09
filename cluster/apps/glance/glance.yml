@@ -323,12 +323,12 @@ pages:
               - devops
               - performance
 
-  - name: Stats
-    columns:
-      - size: full
-        widgets:
-          - type: iframe
-            title: Homelab Status
-            source: https://beszel.local.ejsadiarin.com/system/homelab
-            height: 800
+# - name: Stats
+#   columns:
+#     - size: full
+#       widgets:
+#         - type: iframe
+#           title: Homelab Status
+#           source: https://beszel.local.ejsadiarin.com/system/homelab
+#           height: 800
 
