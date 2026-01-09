@@ -5,9 +5,9 @@ metadata:
   namespace: hello-world
 spec:
   parentRefs:
-    - name: gateway-external # Must match your Gateway's metadata.name
+    - name: gateway-external # must match Gateway's metadata.name
       namespace: gateway
-      sectionName: https # Must match your Gateway's listeners[].name
+      sectionName: https # must match Gateway's listeners[].name
   hostnames:
     - "hello-world.ejsadiarin.com"
   rules:

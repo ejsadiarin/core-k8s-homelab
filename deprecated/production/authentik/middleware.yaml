@@ -1,5 +1,4 @@
 # apps/production/authentik/middleware.yaml
----
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -10,7 +9,7 @@ apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
   name: authentik
-  namespace: authentik # Must match your Authentik app's namespace
+  namespace: authentik # must match Authentik app's namespace
 spec:
   forwardAuth:
     # This must be the Kubernetes Service name for your authentik app
@@ -28,3 +27,4 @@ spec:
       - X-authentik-meta-provider
       - X-authentik-meta-app
       - X-authentik-meta-version
+

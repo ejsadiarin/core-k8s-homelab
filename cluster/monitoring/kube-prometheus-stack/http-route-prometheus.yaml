@@ -5,9 +5,9 @@ metadata:
   namespace: kube-prometheus-stack
 spec:
   parentRefs:
-    - name: gateway-internal # Must match your Gateway's metadata.name
+    - name: gateway-internal # must match Gateway's metadata.name
       namespace: gateway
-      sectionName: https # Must match your Gateway's listeners[].name
+      sectionName: https # must match Gateway's listeners[].name
   hostnames:
     - "prometheus.int.ejsadiarin.com"
   rules:
