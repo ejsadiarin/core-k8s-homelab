@@ -394,6 +394,52 @@
 - Committed and pushed the changes to the `cluster` branch.
 - Argo CD automatically picked up the change and synced the application.
 
+## 17. Configuration: Glance Filename Extension Mismatch
+
+**Timestamp:** 2026-01-10 17:10
+
+**Problem:** `glance` application pods in `CrashLoopBackOff` and Argo CD reported a `ComparisonError`.
+
+**Error:** `rpc error: code = Unknown desc = error generating manifests ... glance.yaml: no such file or directory`.
+
+**Diagnosis:**
+- The actual file on disk was named `glance.yml`.
+- `kustomization.yaml` referenced `glance.yaml`.
+- `deployment.yaml` was mounting to `/app/glance.yml` but using `subPath: glance.yaml`.
+- Kustomize failed because the source file name didn't match the manifest.
+
+**Diagnosis Steps:**
+1.  **Checked Application Status:** Confirmed the `ComparisonError` in Argo CD.
+2.  **Listed Directory:** `ls -la cluster/apps/glance/` revealed the file was actually `glance.yml`.
+
+**Solution:**
+- Updated `kustomization.yaml` to reference `glance.yml`.
+- Updated `deployment.yaml` to use `subPath: glance.yml`.
+- Aligned `mountPath` to `/app/glance.yml`.
+
+## 18. Connectivity: Glance "No Healthy Upstream" (Label Mismatch)
+
+**Timestamp:** 2026-01-10 17:30
+
+**Problem:** `glance` application marked as `Healthy` in Argo CD and pods were `Running`, but accessing the domain returned `503 Service Unavailable` / `no healthy upstream`.
+
+**Diagnosis:**
+- The Cilium Gateway (Envoy) could not find any healthy endpoints for the service.
+- There was a mismatch between the Service selector and the Pod labels.
+- **Service Selector:** `app: glance` AND `app.kubernetes.io/name: glance`.
+- **Pod Labels:** Only `app: glance`.
+
+**Diagnosis Steps:**
+1.  **Verified Pod Health:** `kubectl get pods -n glance` showed pods were `Running` and passing readiness probes.
+2.  **Verified Service Endpoints:** `kubectl get endpoints -n glance` showed no IP addresses.
+3.  **Compared Labels:**
+    *   `kubectl get svc glance -n glance -o yaml` (Checked `spec.selector`)
+    *   `kubectl get pod -n glance --show-labels` (Checked Pod labels)
+4.  **Conclusion:** The Service required a label that the Pods didn't have.
+
+**Solution:**
+- Updated `deployment.yaml` to include `app.kubernetes.io/name: glance` in the pod template labels.
+
 ---
 
 ## 💡 Valuable Notes for Future
