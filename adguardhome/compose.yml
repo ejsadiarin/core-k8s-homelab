@@ -10,4 +10,10 @@ services:
     volumes:
       - ./config:/opt/adguardhome/conf
       - ./work:/opt/adguardhome/work
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.adguardhome.rule=Host(`adguard.local.ejsadiarin.com`)"
+      - "traefik.http.routers.adguardhome.entrypoints=https"
+      - "traefik.http.routers.adguardhome.tls=true"
+      - "traefik.http.services.adguardhome.loadbalancer.server.port=2283"
 
