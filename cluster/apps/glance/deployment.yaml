@@ -50,8 +50,8 @@ spec:
               readOnly: true
             # [ADDED] Configuration mount
             - name: glance-config
-              mountPath: /app/config/glance.yml
-              subPath: glance.yml
+              mountPath: /app/config/glance.yaml
+              subPath: glance.yaml
 
       volumes:
         - name: localtime
