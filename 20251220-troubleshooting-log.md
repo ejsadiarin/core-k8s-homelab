@@ -367,6 +367,33 @@
 
 **Solution:** Updated `AdGuardHome.yaml` to explicitly set the `http.address` to `0.0.0.0:3000` to match the expected port mapping.
 
+## 16. Deployment: Glance Application Sync Failure
+
+**Timestamp:** 2026-01-10 16:35
+
+**Problem:** `glance` application stuck in `Unknown` sync status in ArgoCD.
+
+**Error:** `rpc error: code = Unknown desc = error generating manifests ... lstat .../cluster/apps/glance/namespace.yaml: no such file or directory`
+
+**Diagnosis:**
+- Argo CD failed to generate manifests for the `glance` application.
+- The error message clearly indicated that `kustomization.yaml` was referencing `namespace.yaml`, but the file was missing from the repository.
+
+**Diagnosis Steps:**
+1.  **Checked Application Status:**
+    ```bash
+    kubectl get application glance -n argocd -o yaml
+    ```
+    * Status Message confirmed the missing file error.
+
+2.  **Verified Directory Content:**
+    * Checked `cluster/apps/glance/` and confirmed `namespace.yaml` was missing.
+
+**Solution:**
+- Created the missing `cluster/apps/glance/namespace.yaml` file.
+- Committed and pushed the changes to the `cluster` branch.
+- Argo CD automatically picked up the change and synced the application.
+
 ---
 
 ## 💡 Valuable Notes for Future
