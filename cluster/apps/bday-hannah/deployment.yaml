@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bday-hannah
+  namespace: bday
+  labels:
+    app: bday-hannah
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bday-hannah
+  template:
+    metadata:
+      labels:
+        app: bday-hannah
+    spec:
+      imagePullSecrets:
+        - name: ghcr-secret
+      containers:
+        - name: bday-hannah
+          # REPLACE THIS with your actual registry path
+          # Example: gitea.your-domain.com/username/bday-hannah:latest
+          image: ghcr.io/ejsadiarin/bday-hannah-2026:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              name: http
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "64Mi"
+            limits:
+              cpu: "100m"
+              memory: "128Mi"
+      # If your registry requires authentication:
+      # imagePullSecrets:
+      #   - name: regcred

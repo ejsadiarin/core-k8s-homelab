@@ -5,10 +5,13 @@ This guide walks you through bootstrapping your cluster using the GitOps workflo
 ---
 
 ## 🏗️ Stage 1: Initial Host & CNI Setup
+
 Establish the foundation of your cluster. These steps are manual and imperative.
 
 ### 1. Host Preparation (All Nodes)
+
 Install essential packages and kernel modules.
+
 ```bash
 sudo apt update && sudo apt install -y zfsutils-linux nfs-kernel-server cifs-utils open-iscsi
 sudo modprobe iptable_raw xt_socket
@@ -22,6 +25,7 @@ rm kubeseal-0.24.5-linux-amd64.tar.gz kubeseal
 ```
 
 ### 2. K3s Installation (Master Node)
+
 ```bash
 export SETUP_NODEIP=192.168.10.171  # Update to your NUC IP
 export SETUP_CLUSTERTOKEN=your-strong-token
@@ -34,7 +38,7 @@ curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="v1.33.6+k3s1" \
   --disable-cloud-controller \
   --disable-kube-proxy" \
   K3S_TOKEN=$SETUP_CLUSTERTOKEN \
-  K3S_KUBECONFIG_MODE=644 sh -s - 
+  K3S_KUBECONFIG_MODE=644 sh -s -
 
 # Setup kubeconfig
 mkdir -p $HOME/.kube && sudo cp -i /etc/rancher/k3s/k3s.yaml $HOME/.kube/config
@@ -42,7 +46,9 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config && chmod 600 $HOME/.kube/config
 ```
 
 ### 3. CNI Bootstrap (Cilium)
+
 We install Cilium manually first so that pods can actually communicate.
+
 ```bash
 helm repo add cilium https://helm.cilium.io && helm repo update
 helm install cilium cilium/cilium -n kube-system \
@@ -54,9 +60,11 @@ helm install cilium cilium/cilium -n kube-system \
 ---
 
 ## 🔄 Stage 2: GitOps Setup (Argo CD)
+
 Now we install the tool that will manage everything else.
 
 ### 1. Install CRDs & Argo CD
+
 ```bash
 # Gateway API CRDs (Crucial!)
 kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.4.0/standard-install.yaml
@@ -68,25 +76,29 @@ helm show crds sealed-secrets/sealed-secrets --version 2.18.0 | kubectl apply -f
 
 # Argo CD
 kubectl create namespace argocd
-kubectl kustomize --enable-helm cluster/infrastructure/controllers/argocd | kubectl apply -f - 
+kubectl kustomize --enable-helm cluster/infrastructure/controllers/argocd | kubectl apply -f -
 kubectl apply -f cluster/infrastructure/controllers/argocd/projects.yaml
 ```
 
 ---
 
 ## 📂 Stage 3: Repository Configuration
+
 **THIS IS THE MOST IMPORTANT PART.** You must tell the cluster to look at **your** repo.
 
 ### 1. Update your files
+
 Open these files and ensure the `repoURL` points to `https://github.com/ejsadiarin/core-k8s-homelab.git` and the `targetRevision` is `cluster`.
 
-*   `cluster/infrastructure/infrastructure-components-appset.yaml`
-*   `cluster/apps/myapplications-appset.yaml`
-*   `cluster/monitoring/monitoring-components-appset.yaml`
-*   `cluster/infrastructure/controllers/argocd/projects.yaml`
+- `cluster/infrastructure/infrastructure-components-appset.yaml`
+- `cluster/apps/myapplications-appset.yaml`
+- `cluster/monitoring/monitoring-components-appset.yaml`
+- `cluster/infrastructure/controllers/argocd/projects.yaml`
 
 ### 2. 🏁 First Git Commit Checkpoint
+
 Now, push your configuration to GitHub so ArgoCD can see it.
+
 ```bash
 git add .
 git commit -m "feat: initial cluster configuration for ejsadiarin repo"
@@ -145,6 +157,7 @@ cloudflared tunnel route dns $TUNNEL_ID "$DOMAIN" # Optional: Root domain
 ```
 
 Now upload the credentials to the cluster:
+
 ```bash
 kubectl create namespace cloudflared
 kubectl create secret generic tunnel-credentials -n cloudflared \
@@ -152,14 +165,15 @@ kubectl create secret generic tunnel-credentials -n cloudflared \
 ```
 
 Clean up
+
 ```bash
 rm -v tunnel-creds.json && echo "Credentials file removed"
 ```
 
-
 ### 3. Certificate Management
 
 - Create Secret for the `cloudflare-api-token`
+
 ```bash
 kubectl create namespace cert-manager
 kubectl create secret generic cloudflare-api-token -n cert-manager \
@@ -168,6 +182,7 @@ kubectl create secret generic cloudflare-api-token -n cert-manager \
 ```
 
 - Verify secrets
+
 ```bash
 kubectl get secret cloudflare-api-token -n cert-manager -o jsonpath='{.data.email}' | base64 -d
 kubectl get secret cloudflare-api-token -n cert-manager -o jsonpath='{.data.api-token}' | base64 -d
@@ -185,10 +200,12 @@ Now we tell Argo CD to start building the world based on your repo.
 kubectl apply -f cluster/infrastructure/infrastructure-components-appset.yaml -n argocd
 
 ```
-*Wait ~5-10 minutes. Use `kubectl get pods -A` to see Cilium, Longhorn, and Cert-Manager coming online.*
+
+_Wait ~5-10 minutes. Use `kubectl get pods -A` to see Cilium, Longhorn, and Cert-Manager coming online._
 
 **Critical: Wait for Sealed Secrets**
 Ensure the Sealed Secrets controller is running and the CRD is established before proceeding, otherwise applications will fail to sync.
+
 ```bash
 kubectl wait --for=condition=Available deployment -l app.kubernetes.io/name=sealed-secrets -n sealed-secrets --timeout=300s
 ```
@@ -196,6 +213,7 @@ kubectl wait --for=condition=Available deployment -l app.kubernetes.io/name=seal
 ### 2. Deploy Monitoring & Apps
 
 - Deploy monitoring components
+
 ```bash
 kubectl apply -f cluster/monitoring/monitoring-components-appset.yaml -n argocd
 
@@ -206,6 +224,7 @@ kubectl wait --for=condition=Ready statefulset -l app.kubernetes.io/name=prometh
 ```
 
 - Deploy apps
+
 ```bash
 kubectl apply -f cluster/apps/myapplications-appset.yaml -n argocd
 ```
@@ -233,17 +252,19 @@ To deploy an app, you follow the GitOps flow: **Code -> Commit -> Sync**.
 ---
 
 ## 📝 Summary of "When to Commit"
-*   **Commit when:** You change a YAML manifest (Deployment, Service, PVC).
-*   **Commit when:** You add a new application folder to `cluster/apps/`.
-*   **DO NOT Commit when:** You are creating a Kubernetes Secret (`kubectl create secret`).
-*   **DO NOT Commit when:** You are running one-time install commands (`helm install`, `curl | sh`).
+
+- **Commit when:** You change a YAML manifest (Deployment, Service, PVC).
+- **Commit when:** You add a new application folder to `cluster/apps/`.
+- **DO NOT Commit when:** You are creating a Kubernetes Secret (`kubectl create secret`).
+- **DO NOT Commit when:** You are running one-time install commands (`helm install`, `curl | sh`).
 
 ---
 
 ## Commands
 
 **Port-forward ArgoCD web and get admin password**
-```bash
+
+````bash
 kubectl port-forward svc/argocd-server -n argocd 8080:443
 
 # get admin password
@@ -255,5 +276,8 @@ If an application is stuck or OutOfSync, you can force a sync:
 ```bash
 # Example: Sync the gateway application
 kubectl patch application gateway -n argocd --type merge -p '{"operation": {"sync": {"prune": true}}}'
+````
+
 ```
+
 ```

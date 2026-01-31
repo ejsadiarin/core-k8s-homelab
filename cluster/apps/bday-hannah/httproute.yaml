@@ -1,0 +1,20 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: bday-hannah
+  namespace: bday
+spec:
+  parentRefs:
+    - name: gateway-external
+      namespace: gateway
+      sectionName: https
+  hostnames:
+    - "bday-hannah.ejsadiarin.com" # REPLACE with your desired domain
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: bday-hannah
+          port: 80
