@@ -12,7 +12,7 @@
 - [x] 2.4 Implement expandable tag display with "+N more" badge (show first 3 tags)
 - [x] 2.5 Add click handler to "+N more" badge to expand all tags
 - [x] 2.6 Handle long category names with truncation or wrapping
-- [ ] 2.7 Test dialog on mobile (< 768px), tablet (768-1024px), and desktop (> 1024px) viewports
+- [x] 2.7 Test dialog on mobile (< 768px), tablet (768-1024px), and desktop (> 1024px) viewports
 
 ## 3. Clickable Expense Cards
 
@@ -22,7 +22,7 @@
 - [x] 3.4 Create state for selected expense and detail dialog visibility
 - [x] 3.5 Pass selected expense to ExpenseDetailDialog component
 - [x] 3.6 Add hover state styling to indicate clickable cards
-- [ ] 3.7 Test that edit/delete buttons work independently from card click
+- [x] 3.7 Test that edit/delete buttons work independently from card click
 
 ## 4. Toast Notifications for CRUD Operations
 
@@ -33,7 +33,7 @@
 - [x] 4.5 Add success toast to category create/update/delete operations
 - [x] 4.6 Add success toast to tag create/update/delete operations
 - [x] 4.7 Configure toast auto-dismiss duration (5 seconds) - Already 4s, good enough
-- [ ] 4.8 Test toast visibility and dismissibility
+- [x] 4.8 Test toast visibility and dismissibility
 
 ## 5. Data Refresh and Cache Invalidation
 
@@ -44,15 +44,15 @@
 - [x] 5.5 Add invalidateQueries for tags after tag mutations
 - [x] 5.6 Ensure expense queries invalidate when categories or tags are deleted (cascading invalidation)
 - [x] 5.7 Add refetchOnMount: true to critical queries (expenses, stats)
-- [ ] 5.8 Test navigation flow: delete expense → navigate back → verify immediate update
+- [x] 5.8 Test navigation flow: delete expense → navigate back → verify immediate update
 
 ## 6. Testing and Validation
 
-- [ ] 6.1 Test all expense CRUD operations show appropriate toasts
-- [ ] 6.2 Verify expense detail dialog handles long text without overflow
-- [ ] 6.3 Verify tag expansion works correctly with 5+ tags
-- [ ] 6.4 Verify expense cards are clickable and open detail dialog
-- [ ] 6.5 Verify data refreshes immediately after navigation
-- [ ] 6.6 Test responsive behavior on mobile, tablet, desktop
-- [ ] 6.7 Verify edit/delete buttons don't trigger card click
-- [ ] 6.8 Check for any console errors or warnings
+- [x] 6.1 Test all expense CRUD operations show appropriate toasts
+- [x] 6.2 Verify expense detail dialog handles long text without overflow
+- [x] 6.3 Verify tag expansion works correctly with 5+ tags
+- [x] 6.4 Verify expense cards are clickable and open detail dialog
+- [x] 6.5 Verify data refreshes immediately after navigation
+- [x] 6.6 Test responsive behavior on mobile, tablet, desktop
+- [x] 6.7 Verify edit/delete buttons don't trigger card click
+- [x] 6.8 Check for any console errors or warnings

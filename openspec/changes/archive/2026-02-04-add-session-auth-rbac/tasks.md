@@ -109,7 +109,7 @@
 - [x] 14.3 Test logout flow (session cleared, cookie cleared)
 - [x] 14.4 Test data isolation (user A cannot see user B's data)
 - [x] 14.5 Test admin user management (CRUD users, cannot delete self/demo)
-- [ ] 14.6 Test guest/demo access (read-only - all write operations blocked server-side)
+- [x] 14.6 Test guest/demo access (read-only - all write operations blocked server-side)
 - [x] 14.7 Verify existing data migrated to admin user
 
 ## 15. Documentation and Cleanup

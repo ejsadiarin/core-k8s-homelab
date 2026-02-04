@@ -25,8 +25,8 @@
 
 ## 4. Testing
 
-- [ ] 4.1 Test delete as authenticated user
-- [ ] 4.2 Test delete as guest user
-- [ ] 4.3 Test edit workflow completes properly
-- [ ] 4.4 Verify data refreshes after edit/delete
-- [ ] 4.5 Test UI on desktop and mobile
+- [x] 4.1 Test delete as authenticated user
+- [x] 4.2 Test delete as guest user
+- [x] 4.3 Test edit workflow completes properly
+- [x] 4.4 Verify data refreshes after edit/delete
+- [x] 4.5 Test UI on desktop and mobile
