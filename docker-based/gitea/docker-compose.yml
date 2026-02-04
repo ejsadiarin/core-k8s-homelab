@@ -18,6 +18,7 @@ services:
       # -- (Optional) Change your server settings here...
       - GITEA__server__SSH_PORT=2221  # <-- (Optional) Replace with your desired SSH port
       - GITEA__server__ROOT_URL=https://gitea.local.ejsadiarin.com  # <-- Replace with your FQDN
+      - GITEA__actions__ENABLED=true  # <-- Enable Gitea Actions
     # --> (Optional) When using traefik...
     networks:
       - proxy

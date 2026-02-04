@@ -4,29 +4,29 @@
 
 ### **Compute & OS**
 
-*   **Nodes:** 1 (Single Node Cluster).
-    *   *Role:* Acts as both Control Plane and Worker.
-*   **OS:** Linux (Debian/Ubuntu implied)
-*   **Network Transport:** **Standard Host Network** (Physical IP).
-    *   *Simplicity:* No VPN overlays, no MTU hacks, no routing complexity.
+- **Nodes:** 1 (Single Node Cluster).
+    - _Role:_ Acts as both Control Plane and Worker.
+- **OS:** Linux (Debian/Ubuntu implied)
+- **Network Transport:** **Standard Host Network** (Physical IP).
+    - _Simplicity:_ No VPN overlays, no MTU hacks, no routing complexity.
 
 ### **Kubernetes Core**
 
-*   **Distribution:** **K3s**
-    *   *Flags:* `--flannel-backend=none` (for Cilium), `--disable-kube-proxy` (for Cilium), `--disable=traefik`, `--disable=servicelb`.
-*   **CNI (Networking):** **Cilium**
-    *   *Mode:* Kube-proxy replacement enabled.
-    *   *Feature:* **Gateway API** enabled (for public ingress via Cloudflare).
+- **Distribution:** **K3s**
+    - _Flags:_ `--flannel-backend=none` (for Cilium), `--disable-kube-proxy` (for Cilium), `--disable=traefik`, `--disable=servicelb`.
+- **CNI (Networking):** **Cilium**
+    - _Mode:_ Kube-proxy replacement enabled.
+    - _Feature:_ **Gateway API** enabled (for public ingress via Cloudflare).
 
 ### **Access & Ingress**
 
-*   **Public Access:** **Cloudflare Tunnel** (`cloudflared`) -> Cilium Gateway.
-    *   Traffic Flow: User -> Cloudflare -> `cloudflared` (pod) -> Cilium Gateway (Service) -> App.
+- **Public Access:** **Cloudflare Tunnel** (`cloudflared`) -> Cilium Gateway.
+    - Traffic Flow: User -> Cloudflare -> `cloudflared` (pod) -> Cilium Gateway (Service) -> App.
 
 ### **GitOps**
 
-*   **Tool:** **ArgoCD**
-*   **Structure:** App of Apps pattern (`cluster/bootstrap`).
+- **Tool:** **ArgoCD**
+- **Structure:** App of Apps pattern (`cluster/bootstrap`).
 
 ---
 
@@ -35,15 +35,15 @@
 ```text
 cluster/
 ├── bootstrap/              # ArgoCD Entrypoints
-│   ├── argocd-appset.yaml  
+│   ├── argocd-appset.yaml
 │   ├── argocd-root-app.yaml
-│   └── argocd-ui.yaml      
+│   └── argocd-ui.yaml
 ├── core/                   # Infrastructure Apps
-│   ├── cilium/             
-│   ├── cert-manager/       
-│   ├── cloudflared/        
-│   └── namespaces/         
-├── apps/                   
+│   ├── cilium/
+│   ├── cert-manager/
+│   ├── cloudflared/
+│   └── namespaces/
+├── apps/
 ```
 
 ---
@@ -59,7 +59,8 @@ cluster/
 ### Phase 2: Cluster Bootstrap (Manual)
 
 1.  **Install K3s Server:**
-    *   *Note:* Replace `<HOST_IP>` with your machine's main IP (e.g., `192.168.x.x` or Public IP).
+    - _Note:_ Replace `<HOST_IP>` with your machine's main IP (e.g., `192.168.x.x` or Public IP).
+
     ```bash
     curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server \
       --flannel-backend=none \
@@ -69,11 +70,13 @@ cluster/
       --node-ip=<HOST_IP> \
       --advertise-address=<HOST_IP>" sh -
     ```
-    *   *Kubeconfig Location:* `/etc/rancher/k3s/k3s.yaml`. Copy this to your local machine.
-        *   **Local Setup:** `mkdir -p ~/.kube && scp <USER>@<HOST_IP>:/etc/rancher/k3s/k3s.yaml ~/.kube/config && chmod 600 ~/.kube/config`. Edit `~/.kube/config` and replace `127.0.0.1` with `<HOST_IP>`.
+
+    - _Kubeconfig Location:_ `/etc/rancher/k3s/k3s.yaml`. Copy this to your local machine.
+        - **Local Setup:** `mkdir -p ~/.kube && scp <USER>@<HOST_IP>:/etc/rancher/k3s/k3s.yaml ~/.kube/config && chmod 600 ~/.kube/config`. Edit `~/.kube/config` and replace `127.0.0.1` with `<HOST_IP>`.
 
 2.  **Install Cilium CLI & Chart:**
-    *   *Standard Install:* No hacks required.
+    - _Standard Install:_ No hacks required.
+
     ```bash
     helm repo add cilium https://helm.cilium.io/
     helm repo update
@@ -95,6 +98,7 @@ cluster/
 ### Phase 3: GitOps Initialization
 
 1.  **Install ArgoCD:**
+
 ```bash
 kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
@@ -102,9 +106,11 @@ kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/st
 
 2.  **Apply Root App:**
     - IMPORTANT: wait until all pods are ready and "Status: Running"
+
 ```bash
 kubectl apply -f cluster/bootstrap/argocd-root-app.yaml
 ```
+
     *   *Action:* Ensure your git repo's `cluster/core/cilium/app.yaml` matches the standard settings (remove any `mtu: 1200` or `devices: tailscale0` lines you might have added earlier).
 
 ### Phase 4: Migration
