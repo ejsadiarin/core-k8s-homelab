@@ -20,8 +20,8 @@
 - [x] 3.1 Redesign header layout: category beside price, not above
 - [x] 3.2 Add proper flex layout with gap spacing
 - [x] 3.3 Improve text truncation with title tooltips
-- [ ] 3.4 Clean up overflow styling (remove max-h if causing issues)
-- [ ] 3.5 Ensure responsive behavior on mobile
+- [x] 3.4 Clean up overflow styling (remove max-h if causing issues)
+- [x] 3.5 Ensure responsive behavior on mobile
 
 ## 4. Testing
 
