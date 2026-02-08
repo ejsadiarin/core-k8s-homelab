@@ -83,11 +83,11 @@
 
 ## 11. Frontend - Expense Page Refactor
 
-- [ ] 11.1 Update `/dashboard/budget/expenses/new/page.tsx` to render dialog instead of full page
-- [ ] 11.2 Implement Next.js intercepting route pattern (if using parallel routes)
-- [ ] 11.3 Test deep linking (direct URL navigation to /expenses/new)
-- [ ] 11.4 Test browser back button closes dialog and returns to budget dashboard
-- [ ] 11.5 Add redirect rule in `next.config.js` for backward compatibility (if needed)
+- [x] 11.1 Update `/dashboard/budget/expenses/new/page.tsx` to redirect to budget dashboard with query param
+- [x] 11.2 Implement deep linking pattern (query param detection in dashboard)
+- [x] 11.3 Test deep linking (direct URL navigation to /expenses/new opens dialog)
+- [x] 11.4 Test browser back button closes dialog and returns to budget dashboard
+- [x] 11.5 Add redirect handling for backward compatibility (query param approach)
 
 ## 12. Testing and Validation
 
