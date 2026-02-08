@@ -63,23 +63,23 @@
 
 ## 9. Frontend - Expense Creation Dialog Component
 
-- [ ] 9.1 Create new `expense-form-dialog.tsx` component in `components/budget/`
-- [ ] 9.2 Copy ExpenseForm from existing page and wrap in Dialog component from shadcn/ui
-- [ ] 9.3 Add dialog state management (open/close handlers)
-- [ ] 9.4 Implement auto-close on successful expense creation
-- [ ] 9.5 Add ESC key handler to close dialog
-- [ ] 9.6 Add click-outside handler to close dialog
-- [ ] 9.7 Implement focus trap within dialog
-- [ ] 9.8 Add loading state (disable submit button, show "Creating..." text)
-- [ ] 9.9 Add error handling (keep dialog open on error, display error message)
+- [x] 9.1 Create new `expense-form-dialog.tsx` component in `components/budget/`
+- [x] 9.2 Copy ExpenseForm from existing page and wrap in Dialog component from shadcn/ui
+- [x] 9.3 Add dialog state management (open/close handlers)
+- [x] 9.4 Implement auto-close on successful expense creation
+- [x] 9.5 Add ESC key handler to close dialog
+- [x] 9.6 Add click-outside handler to close dialog (built-in Dialog feature)
+- [x] 9.7 Implement focus trap within dialog (built-in Dialog feature)
+- [x] 9.8 Add loading state (disable submit button, show "Creating..." text)
+- [x] 9.9 Add error handling (keep dialog open on error, display error message)
 
 ## 10. Frontend - Budget Dashboard Integration
 
-- [ ] 10.1 Add expense dialog state to budget dashboard `page.tsx`
-- [ ] 10.2 Update "Add Expense" button to open dialog instead of navigating to page
-- [ ] 10.3 Add ExpenseFormDialog component to dashboard render
-- [ ] 10.4 Pass expense creation handlers to dialog component
-- [ ] 10.5 Test dialog opens/closes correctly from dashboard
+- [x] 10.1 Add expense dialog state to budget dashboard `page.tsx`
+- [x] 10.2 Update "Add Expense" button to open dialog instead of navigating to page
+- [x] 10.3 Add ExpenseFormDialog component to dashboard render
+- [x] 10.4 Pass expense creation handlers to dialog component
+- [x] 10.5 Test dialog opens/closes correctly from dashboard
 
 ## 11. Frontend - Expense Page Refactor
 
