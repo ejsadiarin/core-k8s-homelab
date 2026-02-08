@@ -35,10 +35,12 @@ The expense dialog SHALL follow best practices for modal UX patterns.
 - **THEN** keyboard focus stays within dialog
 - **THEN** Tab key cycles through form fields within dialog
 
-#### Scenario: Escape key closes dialog
+#### Scenario: Escape key closes dialog without navigation
 - **WHEN** expense dialog is open
 - **WHEN** user presses Escape key
 - **THEN** system closes dialog without saving
+- **THEN** system prevents default browser navigation behavior
+- **THEN** user remains on current page (budget dashboard or expenses list)
 
 #### Scenario: Click outside closes dialog
 - **WHEN** expense dialog is open
@@ -82,9 +84,10 @@ Users SHALL be able to navigate directly to expense creation via URL.
 - **THEN** dialog closes and shows normal budget dashboard
 
 #### Scenario: Browser back button closes dialog
-- **WHEN** user opens expense dialog (URL updates to /expenses/new)
+- **WHEN** user opens expense dialog via button click (no URL change)
 - **WHEN** user clicks browser back button
-- **THEN** dialog closes and URL returns to /dashboard/budget
+- **THEN** dialog closes and user remains on current page
+- **THEN** system does not navigate to previous route
 
 ### Requirement: Expense dialog loading states
 The expense dialog SHALL provide clear feedback during async operations.
