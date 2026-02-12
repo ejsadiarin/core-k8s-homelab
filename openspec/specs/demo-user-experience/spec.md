@@ -47,3 +47,15 @@ The system SHALL NOT create, update, or delete any records in the database for g
 - **WHEN** a guest user confirms a delete action
 - **THEN** the system SHALL NOT delete any expense record in the database
 - **AND** the toast notification SHALL appear
+
+### Requirement: Guest mode visual indicator in sidebar
+The system SHALL display a guest mode indicator in the sidebar layout. The sidebar footer SHALL show a "Guest Mode" badge alongside the user info when the user is a guest.
+
+#### Scenario: Guest user sees guest indicator in sidebar
+- **WHEN** a guest user views the dashboard sidebar footer
+- **THEN** a "Guest Mode" badge SHALL be displayed with accent styling (bg-accent/10 text-accent border-accent/30)
+- **AND** the badge SHALL be visible in both expanded and collapsed sidebar states
+
+#### Scenario: Guest user sees guest indicator in compact header
+- **WHEN** a guest user views the compact top header bar
+- **THEN** a "Guest Mode" badge SHALL be displayed near the right-side actions
