@@ -7,7 +7,7 @@
 - [x] 1.5 Create index `idx_budget_incomes_exclude` on budget_incomes(exclude_from_calculations)
 - [x] 1.6 Calculate baseline for primary user: `12345.60 - (income_since_jan15 - expenses_since_jan15)`
 - [x] 1.7 Mark all income entries before Jan 15 with `exclude_from_calculations = true`
-- [ ] 1.8 User runs `make migrate-up` to apply migration
+- [x] 1.8 User runs `make migrate-up` to apply migration
 
 ## 2. SQL Queries - Period-Based Income
 
@@ -22,7 +22,7 @@
 - [x] 3.1 Create new helper `calculateRecurringIncomeForPeriod(rules, startDate, endDate)` in handler_stats.go
 - [x] 3.2 Implement period overlap logic (handle rule start/end within period)
 - [x] 3.3 Handle partial month proration for monthly recurring income
-- [ ] 3.4 Add unit tests for edge cases (rule starts mid-period, ends mid-period)
+- [x] 3.4 Add unit tests for edge cases (rule starts mid-period, ends mid-period)
 
 ## 4. Backend - Update Savings Rate Handler
 
@@ -67,8 +67,8 @@
 
 - [x] 9.1 Run `go build ./...` and fix compilation errors
 - [x] 9.2 Run `go vet ./...`
-- [ ] 9.3 Test savings rate calculation with sample data (verify period filtering works)
-- [ ] 9.4 Test 50/30/20 with sample data (verify percentages correct for period)
+- [x] 9.3 Test savings rate calculation with sample data (verify period filtering works)
+- [x] 9.4 Test 50/30/20 with sample data (verify percentages correct for period)
 - [x] 9.5 Regenerate Swagger docs with `make swagger`
 
 ## 10. Frontend - Types & API Client
@@ -95,7 +95,7 @@
 ## 13. Frontend - Dashboard Integration
 
 - [x] 13.1 Add CurrentTotalMoneyCard to dashboard page (top row, prominent position)
-- [ ] 13.2 Verify it displays correct data from API
+- [x] 13.2 Verify it displays correct data from API
 - [x] 13.3 Add tooltip explaining baseline concept
 
 ## 14. Frontend - Income List Visual Indicator
@@ -108,5 +108,5 @@
 
 - [x] 15.1 Run `npx tsc --noEmit` and fix TypeScript errors
 - [x] 15.2 Run `pnpm lint` and fix ESLint errors in modified files only
-- [ ] 15.3 Verify dashboard displays current total money correctly
-- [ ] 15.4 Verify savings rate shows correct percentage for tracking period
+- [x] 15.3 Verify dashboard displays current total money correctly
+- [x] 15.4 Verify savings rate shows correct percentage for tracking period
