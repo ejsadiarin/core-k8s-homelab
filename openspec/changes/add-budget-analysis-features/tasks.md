@@ -3,7 +3,7 @@
 - [x] 1.1 Create migration for `category_budgets` table
 - [x] 1.2 Create migration to add `category_type` column to `budget_categories`
 - [x] 1.3 Create migration for `savings_goals` table
-- [ ] 1.4 Run migrations and verify schema (requires running database)
+- [x] 1.4 Run migrations and verify schema (requires running database)
 
 ## 2. SQL Queries (sqlc)
 
@@ -109,3 +109,10 @@
 - [x] 14.1 Update API documentation with new endpoints (Swagger docs regenerated)
 - [x] 14.2 Add usage examples to README (covered by Swagger UI)
 - [x] 14.3 Update AGENTS.md with new patterns if needed (no new patterns needed)
+
+## 15. UI Refinements
+
+- [x] 15.1 Add sidebar navigation items for Health and Subscriptions pages
+- [x] 15.2 Remove Quick Actions card (redundant with sidebar navigation and header buttons)
+- [x] 15.3 Change all currency from USD ($) to Philippine Pesos (₱) across all budget components
+- [x] 15.4 Clean up unused imports from Quick Actions removal
