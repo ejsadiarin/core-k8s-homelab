@@ -96,9 +96,9 @@
 
 ## 13. Integration & Testing
 
-- [ ] 13.1 Test all new API endpoints with curl/Postman (requires running server)
+- [x] 13.1 Test all new API endpoints with curl/Postman (requires running server)
 - [x] 13.2 Verify calculations manually with sample data
-- [ ] 13.3 Test frontend components with sample data (requires running app)
+- [x] 13.3 Test frontend components with sample data (requires running app)
 - [x] 13.4 Run `make lint` and fix any issues
 - [x] 13.5 Run `go test ./...` for backend
 - [x] 13.6 Update Swagger documentation

@@ -60,40 +60,40 @@
 
 ## 8. Frontend — Types & API Client
 
-- [ ] 8.1 Add `PriorityGroup` type (id, name, slug, display_order)
-- [ ] 8.2 Add `fetchPriorityGroups()` API function
-- [ ] 8.3 Update `Expense` type to include optional `priority_group` object
-- [ ] 8.4 Update `CreateExpenseRequest` / `UpdateExpenseRequest` types to include optional `priority_group_id`
-- [ ] 8.5 Update `FiftyThirtyTwentyResponse` type to include `unclassified_count` and `unclassified_amount`
-- [ ] 8.6 Remove `UpdateCategoryTypeRequest` type and `updateCategoryType()` API function
-- [ ] 8.7 Remove duplicate `fetchCategoryTypeSpending()` function
-- [ ] 8.8 Remove unused `FiftyThirtyTwentyData` and `CategoryTypeSpending` types
+- [x] 8.1 Add `PriorityGroup` type (id, name, slug, display_order)
+- [x] 8.2 Add `fetchPriorityGroups()` API function
+- [x] 8.3 Update `Expense` type to include optional `priority_group` object
+- [x] 8.4 Update `CreateExpenseRequest` / `UpdateExpenseRequest` types to include optional `priority_group_id`
+- [x] 8.5 Update `FiftyThirtyTwentyResponse` type to include `unclassified_count` and `unclassified_amount`
+- [x] 8.6 Remove `UpdateCategoryTypeRequest` type and `updateCategoryType()` API function
+- [x] 8.7 Remove duplicate `fetchCategoryTypeSpending()` function
+- [x] 8.8 Remove unused `FiftyThirtyTwentyData` and `CategoryTypeSpending` types
 
 ## 9. Frontend — React Query Hooks
 
-- [ ] 9.1 Add `usePriorityGroups()` hook
-- [ ] 9.2 Remove `useUpdateCategoryType` mutation hook
-- [ ] 9.3 Update expense mutation hooks to pass `priority_group_id`
+- [x] 9.1 Add `usePriorityGroups()` hook
+- [x] 9.2 Remove `useUpdateCategoryType` mutation hook
+- [x] 9.3 Update expense mutation hooks to pass `priority_group_id`
 
 ## 10. Frontend — Expense Forms
 
-- [ ] 10.1 Add priority group dropdown to `ExpenseFormDialog` (optional field)
-- [ ] 10.2 Add priority group dropdown to `ExpenseDetailDialog` edit mode
-- [ ] 10.3 Show priority group badge on expense cards and detail view
+- [x] 10.1 Add priority group dropdown to `ExpenseFormDialog` (optional field)
+- [x] 10.2 Add priority group dropdown to `ExpenseDetailDialog` edit mode
+- [x] 10.3 Show priority group badge on expense cards and detail view
 
 ## 11. Frontend — Refactor Category Type Selector
 
-- [ ] 11.1 Remove or repurpose `CategoryTypeSelector` component (no longer needed for categories)
-- [ ] 11.2 Update `CategoryTypeBadge` to show priority from expense level if still used, or remove
-- [ ] 11.3 Remove category type column from settings page category list if present
+- [x] 11.1 Remove or repurpose `CategoryTypeSelector` component (no longer needed for categories)
+- [x] 11.2 Update `CategoryTypeBadge` to show priority from expense level if still used, or remove
+- [x] 11.3 Remove category type column from settings page category list if present
 
 ## 12. Frontend — Update 50/30/20 Chart
 
-- [ ] 12.1 Update `FiftyThirtyTwentyChart` to display unclassified count/amount if > 0
-- [ ] 12.2 Verify data flow still works with updated response shape
+- [x] 12.1 Update `FiftyThirtyTwentyChart` to display unclassified count/amount if > 0
+- [x] 12.2 Verify data flow still works with updated response shape
 
 ## 13. Frontend — Lint & Verify
 
-- [ ] 13.1 Run `npx tsc --noEmit` and fix TypeScript errors
-- [ ] 13.2 Run `pnpm lint` and fix ESLint errors (in modified files only)
-- [ ] 13.3 Verify no remaining references to `category_type` in frontend code (except in migration-related comments)
+- [x] 13.1 Run `npx tsc --noEmit` and fix TypeScript errors
+- [x] 13.2 Run `pnpm lint` and fix ESLint errors (in modified files only)
+- [x] 13.3 Verify no remaining references to `category_type` in frontend code (except in migration-related comments)
