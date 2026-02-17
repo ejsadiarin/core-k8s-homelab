@@ -1,3 +1,4 @@
+---
 configuration:
   backupStorageLocation:
     - name: default
@@ -21,7 +22,7 @@ credentials:
   existingSecret: velero-b2-credentials
 
 deployNodeAgent: true
-nodeAgent:
+nodeAgent: # NodeAgent (formerly Restic) for file-level backups
   podVolumePath: /var/lib/kubelet/pods
   privileged: false
 
@@ -43,8 +44,5 @@ nodeSelector:
 metrics:
   enabled: true
 
-# Enable Restic for file-level backups
-enableRestic: true
-restic:
-  podVolumePath: /var/lib/kubelet/pods
-  privileged: false
+# NOTE: enableRestic and restic keys are deprecated in Velero chart 8.x
+# Use deployNodeAgent and nodeAgent instead
