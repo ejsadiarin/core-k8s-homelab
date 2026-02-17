@@ -1,3 +1,4 @@
+---
 # Add leader election namespace to prevent RBAC permissions errors
 global:
   leaderElection:

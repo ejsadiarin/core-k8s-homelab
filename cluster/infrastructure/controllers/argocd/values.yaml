@@ -3,27 +3,27 @@ configs:
     create: true
     application.resourceTrackingMethod: "annotation+label"
     resource.customizations: |
-      admissionregistration.k8s.io/ValidatingWebhookConfiguration:
-        ignoreDifferences: |
-          jsonPointers:
-          - /webhooks/*/clientConfig/caBundle
-      admissionregistration.k8s.io/MutatingWebhookConfiguration:
-        ignoreDifferences: |
-          jsonPointers:
-          - /webhooks/*/clientConfig/caBundle
-      gateway.networking.k8s.io/HTTPRoute:
+      # Needed for App of Apps pattern sync waves to work correctly
+      # Without this, parent apps mark healthy before children are ready
+      resource.customizations.health.argoproj.io_Application: |
+        hs = {}
+        hs.status = "Progressing"
+        hs.message = ""
+        if obj.status ~= nil then
+          if obj.status.health ~= nil then
+            hs.status = obj.status.health.status
+            if obj.status.health.message ~= nil then
+              hs.message = obj.status.health.message
+            end
+          end
+        end
+        return hs
+      # Keep global fallbacks for resources not covered by ApplicationSets
+      gateway.networking.k8s.io_HTTPRoute:
         ignoreDifferences: |
           jsonPointers:
           - /status
-      gateway.networking.k8s.io/Gateway:
-        ignoreDifferences: |
-          jsonPointers:
-          - /status
-      longhorn.io/Volume:
-        ignoreDifferences: |
-          jsonPointers:
-          - /status
-      monitoring.coreos.com/ServiceMonitor:
+      monitoring.coreos.com_ServiceMonitor:
         ignoreDifferences: |
           jsonPointers:
           - /spec/endpoints

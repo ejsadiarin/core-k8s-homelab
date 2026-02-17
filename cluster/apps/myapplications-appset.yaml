@@ -36,6 +36,7 @@ spec:
         automated:
           prune: true
           selfHeal: true
+          allowEmpty: false
         retry:
           limit: 5
           backoff:
@@ -45,7 +46,29 @@ spec:
         syncOptions:
           - CreateNamespace=true
           - ServerSideApply=true
-          - RespectIgnoreDifferences=true
           - ApplyOutOfSyncOnly=true
-          - Replace=false
-          - IgnoreMissingTemplate=true
+          - RespectIgnoreDifferences=true
+      ignoreDifferences:
+        - group: gateway.networking.k8s.io
+          kind: HTTPRoute
+          jsonPointers:
+            - /status
+            - /spec/rules/0/backendRefs/0/weight
+            - /spec/rules/0/backendRefs/0/kind
+            - /spec/rules/0/backendRefs/0/group
+        - group: apps
+          kind: Deployment
+          jsonPointers:
+            - /spec/template/spec/initContainers/*/resources
+            - /spec/template/spec/containers/*/resources
+        - group: ""
+          kind: PersistentVolumeClaim
+          jsonPointers:
+            - /status
+        - group: ""
+          kind: Service
+          jsonPointers:
+            - /status
+      info:
+        - name: Description
+          value: 'User application: {{path.basename}}'

@@ -1,25 +1,24 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: monitoring-components
+  name: longhorn-components
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "0"
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   generators:
     - git:
         repoURL: https://github.com/ejsadiarin/core-k8s-homelab.git
         revision: cluster
         directories:
-          - path: cluster/monitoring/kube-prometheus-stack
-          - path: cluster/monitoring/prometheus-adapter
+          - path: cluster/infrastructure/storage/longhorn
   template:
     metadata:
       name: '{{path.basename}}'
       labels:
-        type: monitoring
+        type: storage
     spec:
-      project: monitoring
+      project: infrastructure
       source:
         plugin:
           name: kustomize-build-with-helm
@@ -37,7 +36,7 @@ spec:
         retry:
           limit: 10
           backoff:
-            duration: 5s
+            duration: 10s
             factor: 2
             maxDuration: 5m
         syncOptions:
@@ -46,31 +45,41 @@ spec:
           - ApplyOutOfSyncOnly=true
           - RespectIgnoreDifferences=true
       ignoreDifferences:
-        - group: monitoring.coreos.com
-          kind: ServiceMonitor
+        # Longhorn webhook CA bundles
+        - group: admissionregistration.k8s.io
+          kind: ValidatingWebhookConfiguration
           jsonPointers:
-            - /spec/endpoints
-        - group: monitoring.coreos.com
-          kind: Prometheus
+            - /webhooks/*/clientConfig/caBundle
+        - group: admissionregistration.k8s.io
+          kind: MutatingWebhookConfiguration
           jsonPointers:
-            - /status
-        - group: monitoring.coreos.com
-          kind: Alertmanager
-          jsonPointers:
-            - /status
-        - group: monitoring.coreos.com
-          kind: PrometheusRule
+            - /webhooks/*/clientConfig/caBundle
+        # Longhorn CRD status fields
+        - group: longhorn.io
+          kind: Volume
           jsonPointers:
             - /status
+        - group: longhorn.io
+          kind: Node
+          jsonPointers:
+            - /status
+        - group: longhorn.io
+          kind: Setting
+          jsonPointers:
+            - /status
+        - group: longhorn.io
+          kind: Engine
+          jsonPointers:
+            - /status
+        - group: longhorn.io
+          kind: Replica
+          jsonPointers:
+            - /status
+        # HTTPRoute for Longhorn UI
         - group: gateway.networking.k8s.io
           kind: HTTPRoute
           jsonPointers:
             - /status
-            - /spec/rules/0/backendRefs/0/weight
-        - group: ""
-          kind: Secret
-          jsonPointers:
-            - /data
       info:
         - name: Description
-          value: 'Monitoring component: {{path.basename}}'
+          value: 'Longhorn distributed storage system'
