@@ -6,9 +6,16 @@ resources:
   - httproute.yaml
   - deployment.yaml
   - service.yaml
-  # - pvc.yaml
+  - ../../common/cilium-network-policies
 
 namespace: glance
+
+labels:
+  - pairs:
+      app.kubernetes.io/name: glance
+      app.kubernetes.io/part-of: web-apps
+      app.kubernetes.io/managed-by: argocd
+
 configMapGenerator:
   - name: glance-config
     files:

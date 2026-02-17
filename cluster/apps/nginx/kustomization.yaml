@@ -8,5 +8,12 @@ resources:
   - service.yaml
   - pvc.yaml
   - httproute.yaml
+  - ../../common/cilium-network-policies
 
 namespace: nginx
+
+labels:
+  - pairs:
+      app.kubernetes.io/name: nginx
+      app.kubernetes.io/part-of: web-apps
+      app.kubernetes.io/managed-by: argocd

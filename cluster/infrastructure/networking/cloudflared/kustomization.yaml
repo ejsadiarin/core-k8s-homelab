@@ -7,6 +7,7 @@ metadata:
 namespace: cloudflared
 resources:
   - ns.yaml
+  - tunnel-credentials-sealed.yaml
   - deployment.yaml
 generatorOptions:
   disableNameSuffixHash: true
@@ -17,6 +18,3 @@ configMapGenerator:
     options:
       annotations:
         argocd.argoproj.io/sync-wave: "-2"
-
-# The secret will be created manually via kubectl
-# ... existing code ...

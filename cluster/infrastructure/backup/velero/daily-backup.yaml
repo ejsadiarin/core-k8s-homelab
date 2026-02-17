@@ -1,0 +1,22 @@
+---
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: daily-backup
+  namespace: velero
+spec:
+  schedule: "0 3 * * *"
+  template:
+    ttl: 720h
+    includedNamespaces:
+      - nginx
+      - glance
+      - hello-world
+      - homepage-dashboard
+      - it-tools
+      - bday
+      - kube-prometheus-stack
+    excludedResources:
+      - events
+      - pods
+    snapshotVolumes: false

@@ -13,10 +13,13 @@ spec:
           - path: cluster/infrastructure/networking/*
           - path: cluster/infrastructure/storage/*
           - path: cluster/infrastructure/controllers/*
+          - path: cluster/infrastructure/backup/*
           - exclude: true
             path: cluster/infrastructure/storage/csi-driver-nfs
           - exclude: true
             path: cluster/infrastructure/storage/csi-driver-smb
+          - exclude: true
+            path: cluster/infrastructure/storage/longhorn
   template:
     metadata:
       name: '{{path.basename}}'

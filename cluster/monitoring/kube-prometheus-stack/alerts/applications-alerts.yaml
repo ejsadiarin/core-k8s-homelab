@@ -1,0 +1,32 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: applications-alerts
+  labels:
+    prometheus: kube-prometheus-stack-prometheus
+    role: alert-rules
+spec:
+  groups:
+    - name: applications.alerts
+      interval: 30s
+      rules:
+        - alert: ApplicationDown
+          expr: up == 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Application {{ $labels.job }} is down"
+            description: "The application {{ $labels.job }} on {{ $labels.instance }} has been down for more than 5 minutes."
+
+        - alert: HighErrorRate
+          expr: |
+            sum(rate(http_requests_total{status=~"5.."}[5m])) by (job)
+            /
+            sum(rate(http_requests_total[5m])) by (job) > 0.1
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High error rate for {{ $labels.job }}"
+            description: "Application {{ $labels.job }} has a 5xx error rate above 10%."

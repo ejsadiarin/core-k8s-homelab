@@ -27,6 +27,11 @@ grafana:
   defaultDashboardsEnabled: true
   nodeSelector:
     kubernetes.io/arch: amd64
+  podLabels:
+    netpol.cilium.io/egress-to-kube-dns: "true"
+    netpol.cilium.io/egress-to-kube-apiserver: "true"
+    netpol.cilium.io/ingress-from-ingress: "true"
+    netpol.cilium.io/ingress-from-prometheus: "true"
 
   # Fix multi-attach errors by configuring deployment strategy
   deploymentStrategy:
@@ -83,6 +88,13 @@ prometheus:
   prometheusSpec:
     nodeSelector:
       kubernetes.io/arch: amd64
+    podMetadata:
+      labels:
+        netpol.cilium.io/egress-to-kube-dns: "true"
+        netpol.cilium.io/egress-to-kube-apiserver: "true"
+        netpol.cilium.io/egress-to-host: "true"
+        netpol.cilium.io/ingress-from-ingress: "true"
+        netpol.cilium.io/ingress-from-prometheus: "true"
     retention: 7d
     # Fix scraping timeouts and intervals to prevent broken pipe errors
     scrapeInterval: 30s
@@ -109,6 +121,11 @@ alertmanager:
   alertmanagerSpec:
     nodeSelector:
       kubernetes.io/arch: amd64
+    podMetadata:
+      labels:
+        netpol.cilium.io/egress-to-kube-dns: "true"
+        netpol.cilium.io/egress-to-kube-apiserver: "true"
+        netpol.cilium.io/ingress-from-prometheus: "true"
     resources:
       limits:
         cpu: 100m

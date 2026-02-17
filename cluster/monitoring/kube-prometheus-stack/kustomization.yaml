@@ -9,6 +9,10 @@ resources:
 - http-route-prometheus.yaml
 - dashboards/k3s-cluster-overview-configmap.yaml
 - dashboards/dashboard-16450-configmap.yaml
+- alerts/kubernetes-alerts.yaml
+- alerts/storage-alerts.yaml
+- alerts/applications-alerts.yaml
+- ../../common/cilium-network-policies
 
 helmCharts:
 - name: kube-prometheus-stack

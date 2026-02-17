@@ -3,10 +3,30 @@ configs:
     create: true
     application.resourceTrackingMethod: "annotation+label"
     resource.customizations: |
+      admissionregistration.k8s.io/ValidatingWebhookConfiguration:
+        ignoreDifferences: |
+          jsonPointers:
+          - /webhooks/*/clientConfig/caBundle
+      admissionregistration.k8s.io/MutatingWebhookConfiguration:
+        ignoreDifferences: |
+          jsonPointers:
+          - /webhooks/*/clientConfig/caBundle
       gateway.networking.k8s.io/HTTPRoute:
         ignoreDifferences: |
           jsonPointers:
           - /status
+      gateway.networking.k8s.io/Gateway:
+        ignoreDifferences: |
+          jsonPointers:
+          - /status
+      longhorn.io/Volume:
+        ignoreDifferences: |
+          jsonPointers:
+          - /status
+      monitoring.coreos.com/ServiceMonitor:
+        ignoreDifferences: |
+          jsonPointers:
+          - /spec/endpoints
   cmp:
     create: true
     plugins:

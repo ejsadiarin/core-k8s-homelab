@@ -8,6 +8,13 @@ resources:
 - service.yaml
 - http-route.yaml
 - ns.yaml
+- ../../common/cilium-network-policies
+
+labels:
+  - pairs:
+      app.kubernetes.io/name: homepage-dashboard
+      app.kubernetes.io/part-of: web-apps
+      app.kubernetes.io/managed-by: argocd
 
 configMapGenerator:
 - name: homepage-config

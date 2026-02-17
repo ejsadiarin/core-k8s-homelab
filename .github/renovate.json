@@ -1,0 +1,59 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "mode": "full",
+  "recreateWhen": "always",
+  "dependencyDashboard": true,
+  "schedule": ["* 0-4 * * 1"],
+  "prCreation": "not-pending",
+  "rebaseWhen": "behind-base-branch",
+  "helm-values": {
+    "enabled": true
+  },
+  "kubernetes": {
+    "fileMatch": ["\\.yaml$"],
+    "ignorePaths": ["cluster/deprecated/"]
+  },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Update Helm chart versions in kustomization.yaml",
+      "managerFilePatterns": ["/kustomization\\.yaml$/"],
+      "matchStrings": [
+        "name:\\s+(?<depName>[^\\s]+)\\s+repo:\\s+(?<registryUrl>[^\\s]+)\\s+version:\\s+(?<currentValue>[^\\s]+)"
+      ],
+      "datasourceTemplate": "helm",
+      "registryUrlTemplate": "{{registryUrl}}"
+    },
+    {
+      "customType": "regex",
+      "description": "Update Docker images in deployment YAML files",
+      "managerFilePatterns": ["/deployment\\.yaml$", "/statefulset\\.yaml$", "/daemonset\\.yaml$"],
+      "matchStrings": [
+        "image:\\s+(?<depName>[^\\s:@]+):(?<currentValue>[^\\s@]+)"
+      ],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchFilePatterns": ["cluster/monitoring/**"],
+      "groupName": "monitoring"
+    },
+    {
+      "matchFilePatterns": ["cluster/infrastructure/controllers/argocd/**"],
+      "groupName": "argocd"
+    },
+    {
+      "matchFilePatterns": ["cluster/infrastructure/networking/cilium/**"],
+      "groupName": "cilium"
+    },
+    {
+      "matchDepTypes": ["devDependencies"],
+      "automerge": true
+    }
+  ],
+  "ignoreDeps": [],
+  "ignorePaths": ["cluster/deprecated/"]
+}
