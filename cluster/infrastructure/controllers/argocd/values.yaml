@@ -3,40 +3,40 @@ configs:
     create: true
     application.resourceTrackingMethod: "annotation+label"
 
-    # Ignore Gateway API HTTPRoute parentRefs normalization
-    resource.customizations.ignoreDifferences.gateway.networking.k8s.io_HTTPRoute: |
-      jqPathExpressions:
-      - '.spec.parentRefs[]? | select(.group == null or .kind == null)'
-      jsonPointers:
-      - /spec/parentRefs
-
-    # Needed for App of Apps pattern sync waves to work correctly
-    # Without this, parent apps mark healthy before children are ready
-    # Making argoCD think the sync is complete when it is not and going to the next sync wave
-    resource.customizations.health.argoproj.io_Application: |
-      hs = {}
-      hs.status = "Progressing"
-      hs.message = ""
-      if obj.status ~= nil then
-        if obj.status.health ~= nil then
-          hs.status = obj.status.health.status
-          if obj.status.health.message ~= nil then
-            hs.message = obj.status.health.message
+    # NOTE: resource.customizations is a single YAML string block.
+    # Keys inside should NOT have "resource.customizations." prefix.
+    # ArgoCD expects: health.<group>_<kind> and <group>_<kind> for ignoreDifferences
+    resource.customizations: |
+      # Health check for Application resources - needed for App of Apps pattern
+      # Without this, parent apps mark healthy before children are ready
+      health.argoproj.io_Application: |
+        hs = {}
+        hs.status = "Progressing"
+        hs.message = ""
+        if obj.status ~= nil then
+          if obj.status.health ~= nil then
+            hs.status = obj.status.health.status
+            if obj.status.health.message ~= nil then
+              hs.message = obj.status.health.message
+            end
           end
         end
-      end
-      return hs
+        return hs
 
-    # Keep global fallbacks for resources not covered by ApplicationSets
-    gateway.networking.k8s.io_HTTPRoute:
-      ignoreDifferences: 
-        jsonPointers:
-        - /status
+      # Global HTTPRoute ignoreDifferences - fallback for apps not in ApplicationSets
+      # Note: ApplicationSets should define their own ignoreDifferences in template.spec
+      gateway.networking.k8s.io_HTTPRoute:
+        ignoreDifferences:
+          jsonPointers:
+          - /status
+          - /spec/rules/0/backendRefs/0/weight
+          - /spec/rules/0/backendRefs/0/kind
+          - /spec/rules/0/backendRefs/0/group
 
-    monitoring.coreos.com_ServiceMonitor:
-      ignoreDifferences:
-        jsonPointers:
-        - /spec/endpoints
+      monitoring.coreos.com_ServiceMonitor:
+        ignoreDifferences:
+          jsonPointers:
+          - /spec/endpoints
   cmp:
     create: true
     plugins:
