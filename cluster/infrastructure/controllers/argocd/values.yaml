@@ -3,12 +3,10 @@ configs:
     create: true
     application.resourceTrackingMethod: "annotation+label"
 
-    # NOTE: resource.customizations is a single YAML string block.
-    # Keys inside should NOT have "resource.customizations." prefix.
-    # ArgoCD expects: health.<group>_<kind> and <group>_<kind> for ignoreDifferences
+    # Health check for Application resources - needed for App of Apps pattern
+    # Without this, parent apps mark healthy before children are ready
+    # NOTE: health checks use Lua and must be a string block
     resource.customizations: |
-      # Health check for Application resources - needed for App of Apps pattern
-      # Without this, parent apps mark healthy before children are ready
       health.argoproj.io_Application: |
         hs = {}
         hs.status = "Progressing"
@@ -22,21 +20,6 @@ configs:
           end
         end
         return hs
-
-      # Global HTTPRoute ignoreDifferences - fallback for apps not in ApplicationSets
-      # Note: ApplicationSets should define their own ignoreDifferences in template.spec
-      gateway.networking.k8s.io_HTTPRoute:
-        ignoreDifferences:
-          jsonPointers:
-          - /status
-          - /spec/rules/0/backendRefs/0/weight
-          - /spec/rules/0/backendRefs/0/kind
-          - /spec/rules/0/backendRefs/0/group
-
-      monitoring.coreos.com_ServiceMonitor:
-        ignoreDifferences:
-          jsonPointers:
-          - /spec/endpoints
   cmp:
     create: true
     plugins:
