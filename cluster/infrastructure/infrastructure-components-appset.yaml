@@ -72,6 +72,12 @@ spec:
             - /spec/rules/0/backendRefs/0/weight
             - /spec/rules/0/backendRefs/0/kind
             - /spec/rules/0/backendRefs/0/group
+          jqPathExpressions:
+            - '.spec.parentRefs[]?.group'
+            - '.spec.parentRefs[]?.kind'
+            - '.spec.rules[]?.backendRefs[]?.group'
+            - '.spec.rules[]?.backendRefs[]?.kind'
+            - '.spec.rules[]?.backendRefs[]?.weight'
         - group: "apps"
           kind: "StatefulSet"
           jqPathExpressions:
