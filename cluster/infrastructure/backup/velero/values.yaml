@@ -1,4 +1,11 @@
 ---
+# Fix: Use kubectl image version that exists (bitnami doesn't have 1.33 yet)
+# Use 1.32 which is compatible with Kubernetes 1.33
+kubectl:
+  image:
+    repository: bitnami/kubectl
+    tag: "1.32"
+
 configuration:
   backupStorageLocation:
     - name: default
