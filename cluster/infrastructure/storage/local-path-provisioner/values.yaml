@@ -7,6 +7,7 @@ image:
 storageClass:
   create: true
   name: local-path
+  provisionerName: rancher.io/local-path
   defaultClass: false
   defaultVolumeType: hostPath
   reclaimPolicy: Retain
