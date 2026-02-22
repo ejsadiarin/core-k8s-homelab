@@ -29,5 +29,5 @@
 
 ## 5. Cleanup
 
-- [ ] 5.1 Commit and push changes
+- [x] 5.1 Commit and push changes
 - [ ] 5.2 Update OpenSpec change status to completed
