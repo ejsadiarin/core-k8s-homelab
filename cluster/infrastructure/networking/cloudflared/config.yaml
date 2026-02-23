@@ -2,8 +2,7 @@ tunnel: k3s-homelab-tunnel
 credentials-file: /etc/cloudflared/credentials/credentials.json
 metrics: 0.0.0.0:2000
 no-autoupdate: true
-# Enhanced logging configuration
-loglevel: debug # Increased log level for more details
+loglevel: debug
 transport-loglevel: debug
 protocol: http2
 ingress:
@@ -29,8 +28,6 @@ ingress:
         - name: Accept-Language
         - name: User-Agent
         - name: True-Client-IP
-        - name: CF-IPCountry
-        - name: CF-RAY
         - name: CF-Worker
         - name: CF-Client-Bot
         - name: CF-Bot-Score

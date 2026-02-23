@@ -8,6 +8,7 @@ metadata:
   namespace: cloudflared
   annotations:
     argocd.argoproj.io/sync-wave: "-1"
+    reloader.stakater.com/auto: "true"
 spec:
   replicas: 1
   selector:
@@ -17,6 +18,8 @@ spec:
     metadata:
       labels:
         app: cloudflared
+        netpol.cilium.io/egress-to-cloudflare: "true"
+        netpol.cilium.io/egress-to-kube-dns: "true"
     spec:
       securityContext:
         runAsNonRoot: true
@@ -25,6 +28,9 @@ spec:
         fsGroup: 65532
         seccompProfile:
           type: RuntimeDefault
+        sysctls:
+          - name: net.ipv4.ping_group_range
+            value: "65532 65532"
       containers:
         - name: cloudflared
           image: cloudflare/cloudflared:2026.2.0 # renovate: docker=cloudflare/cloudflared
@@ -48,18 +54,21 @@ spec:
             periodSeconds: 10
           resources:
             requests:
-              cpu: 100m
+              cpu: 50m
               memory: 64Mi
             limits:
-              cpu: 500m
+              cpu: 200m
               memory: 256Mi
           volumeMounts:
             - name: config
               mountPath: /etc/cloudflared/config/config.yaml
               subPath: config.yaml
+              readOnly: true
             - name: credentials
               mountPath: /etc/cloudflared/credentials
               readOnly: true
+            - name: tmp
+              mountPath: /tmp
       restartPolicy: Always
       volumes:
         - name: config

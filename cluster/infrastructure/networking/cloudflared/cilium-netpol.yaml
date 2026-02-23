@@ -1,0 +1,63 @@
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: cloudflared-netpol
+  namespace: cloudflared
+spec:
+  description: |
+    Allow cloudflared pods to:
+      - Egress to Gateway service for tunnel traffic
+      - Egress to Cloudflare edge servers
+      - Egress to kube-dns for DNS resolution
+      - Ingress from Prometheus for metrics scraping
+
+  endpointSelector:
+    matchLabels:
+      app: cloudflared
+
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: prometheus
+            k8s:io.kubernetes.pod.namespace: kube-prometheus-stack
+      toPorts:
+        - ports:
+            - port: "2000"
+              protocol: TCP
+
+  egress:
+    # Egress to Gateway service
+    - toServices:
+        - k8sService:
+            serviceName: cilium-gateway-gateway-external
+            namespace: gateway
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+
+    # Egress to Cloudflare edge (via DNS)
+    - toFQDNs:
+        - matchName: region1.v2.argotunnel.com
+        - matchName: region2.v2.argotunnel.com
+        - matchPattern: "*.cloudflare.com"
+        - matchPattern: "*.argotunnel.com"
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+            - port: "7844"
+              protocol: TCP
+
+    # Egress to kube-dns
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+            - port: "53"
+              protocol: TCP
