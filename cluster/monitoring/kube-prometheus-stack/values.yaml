@@ -39,7 +39,7 @@ grafana:
 
   persistence:
     enabled: true
-    storageClassName: longhorn
+    storageClassName: local-path
     accessModes:
       - ReadWriteOnce
     size: 1Gi
@@ -110,7 +110,7 @@ prometheus:
     storageSpec:
       volumeClaimTemplate:
         spec:
-          storageClassName: longhorn
+          storageClassName: local-path
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
@@ -136,7 +136,7 @@ alertmanager:
     storage:
       volumeClaimTemplate:
         spec:
-          storageClassName: longhorn
+          storageClassName: local-path
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
