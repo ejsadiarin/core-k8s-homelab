@@ -27,14 +27,14 @@ spec:
               protocol: TCP
 
   egress:
-    # Egress to Gateway service
+    # Egress to Gateway service (HTTP for internal cluster traffic)
     - toServices:
         - k8sService:
             serviceName: cilium-gateway-gateway-external
             namespace: gateway
       toPorts:
         - ports:
-            - port: "443"
+            - port: "80"
               protocol: TCP
 
     # Egress to Cloudflare edge (via DNS)

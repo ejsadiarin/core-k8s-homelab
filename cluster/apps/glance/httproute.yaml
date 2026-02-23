@@ -8,7 +8,6 @@ spec:
   parentRefs:
     - name: gateway-external
       namespace: gateway
-      sectionName: https
   hostnames:
     - "dash.ejsadiarin.com"
   rules:

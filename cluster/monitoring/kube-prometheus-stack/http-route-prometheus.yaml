@@ -7,7 +7,6 @@ spec:
   parentRefs:
     - name: gateway-internal # must match Gateway's metadata.name
       namespace: gateway
-      sectionName: https # must match Gateway's listeners[].name
   hostnames:
     - "prometheus.int.ejsadiarin.com"
   rules:

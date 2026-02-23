@@ -6,7 +6,6 @@ spec:
   parentRefs:
     - name: gateway-internal
       namespace: gateway
-      sectionName: https
   hostnames:
     - "homepage.int.ejsadiarin.com"
   rules:

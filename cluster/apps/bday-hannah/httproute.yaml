@@ -7,7 +7,6 @@ spec:
   parentRefs:
     - name: gateway-external
       namespace: gateway
-      sectionName: https
   hostnames:
     - "bday-hannah.ejsadiarin.com" # REPLACE with your desired domain
   rules:
