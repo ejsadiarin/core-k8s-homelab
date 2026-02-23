@@ -78,8 +78,19 @@ Error: json: cannot unmarshal object into Go struct field rawResourceOverride.ig
 - [x] 1.5.5 Update values.yaml: storageClassName longhorn → local-path for Grafana
 - [x] 1.5.6 Update values.yaml: storageClassName longhorn → local-path for Prometheus
 - [x] 1.5.7 Update values.yaml: storageClassName longhorn → local-path for Alertmanager
-- [ ] 1.5.8 Force ArgoCD sync to recreate PVCs
-- [ ] 1.5.9 Verify monitoring stack pods are Running
+- [x] 1.5.8 Force ArgoCD sync to recreate PVCs
+- [x] 1.5.9 Verify monitoring stack pods are Running
+
+**Completed 2026-02-23:** kube-prometheus-stack now Synced/Healthy with local-path PVCs.
+
+**Key Learning:** Longhorn ValidatingWebhookConfiguration was blocking PVC operations even after Longhorn was "removed". Had to delete `longhorn-webhook-validator` before PVC deletion could proceed.
+
+## 1.6 nginx PVC Migration
+
+- [ ] 1.6.1 Delete nginx pod using Longhorn PVC
+- [ ] 1.6.2 Force delete nginx PVC and PV
+- [ ] 1.6.3 Restart ArgoCD repo server to clear cache
+- [ ] 1.6.4 Trigger nginx sync to recreate PVC with local-path
 
 ## 2. Cloudflared Migration
 
