@@ -87,18 +87,20 @@ Error: json: cannot unmarshal object into Go struct field rawResourceOverride.ig
 
 ## 1.6 nginx PVC Migration
 
-- [ ] 1.6.1 Delete nginx pod using Longhorn PVC
-- [ ] 1.6.2 Force delete nginx PVC and PV
-- [ ] 1.6.3 Restart ArgoCD repo server to clear cache
-- [ ] 1.6.4 Trigger nginx sync to recreate PVC with local-path
+- [x] 1.6.1 Delete nginx pod using Longhorn PVC
+- [x] 1.6.2 Force delete nginx PVC and PV
+- [x] 1.6.3 Restart ArgoCD repo server to clear cache
+- [x] 1.6.4 Trigger nginx sync to recreate PVC with local-path
+
+**Completed 2026-02-23:** nginx now Synced with local-path PVC (Bound). Key issue was that previous changes were never committed to git — ArgoCD was still seeing old longhorn config.
 
 ## 2. Cloudflared Migration
 
-- [ ] 2.1 Convert DaemonSet to Deployment in `cluster/infrastructure/networking/cloudflared/deployment.yaml`
-- [ ] 2.2 Add PodSecurityContext (runAsNonRoot, runAsUser: 65532)
-- [ ] 2.3 Add ContainerSecurityContext (readOnlyRootFilesystem, drop capabilities)
-- [ ] 2.4 Update resource limits (requests: 100m/64Mi, limits: 500m/256Mi)
-- [ ] 2.5 Add emptyDir volume for /tmp
+- [x] 2.1 Convert DaemonSet to Deployment in `cluster/infrastructure/networking/cloudflared/deployment.yaml`
+- [x] 2.2 Add PodSecurityContext (runAsNonRoot, runAsUser: 65532)
+- [x] 2.3 Add ContainerSecurityContext (readOnlyRootFilesystem, drop capabilities)
+- [x] 2.4 Update resource limits (requests: 100m/64Mi, limits: 500m/256Mi)
+- [x] 2.5 Add emptyDir volume for /tmp
 - [ ] 2.6 Commit and push changes
 - [ ] 2.7 Verify tunnel reconnects after Deployment rollout
 

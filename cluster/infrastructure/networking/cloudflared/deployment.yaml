@@ -1,5 +1,6 @@
+---
 apiVersion: apps/v1
-kind: DaemonSet
+kind: Deployment
 metadata:
   labels:
     app: cloudflared
@@ -8,6 +9,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "-1"
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: cloudflared
@@ -16,6 +18,13 @@ spec:
       labels:
         app: cloudflared
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: cloudflared
           image: cloudflare/cloudflared:2025.1.0 # renovate: docker=cloudflare/cloudflared
@@ -25,6 +34,11 @@ spec:
             - --config
             - /etc/cloudflared/config/config.yaml
             - run
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
           livenessProbe:
             httpGet:
               path: /ready
@@ -37,7 +51,8 @@ spec:
               cpu: 100m
               memory: 64Mi
             limits:
-              memory: 512Mi
+              cpu: 500m
+              memory: 256Mi
           volumeMounts:
             - name: config
               mountPath: /etc/cloudflared/config/config.yaml
@@ -45,6 +60,8 @@ spec:
             - name: credentials
               mountPath: /etc/cloudflared/credentials
               readOnly: true
+            - name: tmp
+              mountPath: /tmp
       restartPolicy: Always
       volumes:
         - name: config
@@ -53,3 +70,5 @@ spec:
         - name: credentials
           secret:
             secretName: tunnel-credentials
+        - name: tmp
+          emptyDir: {}
