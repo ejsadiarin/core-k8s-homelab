@@ -27,3 +27,6 @@ kubeconfig
 *.env
 values-local.yaml
 values-local.yml
+
+# Kustomize Helm chart cache
+charts/
