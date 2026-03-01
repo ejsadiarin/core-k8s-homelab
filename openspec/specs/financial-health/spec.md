@@ -34,8 +34,20 @@ The system SHALL calculate and display spending distribution across needs, wants
 - **WHEN** user views 50/30/20 chart
 - **THEN** system shows deviation from ideal with recommendations
 
+### Requirement: System analyzes spending patterns
+The system SHALL provide financial health metrics that can be filtered by an explicit custom date range (`start_date` and `end_date`), replacing the hardcoded week/month periods. The default period SHALL be from the user's tracking start date (e.g. Jan 15, 2026) to today.
+
+#### Scenario: Health page with default dates
+- **WHEN** user navigates to the Health page without query parameters
+- **THEN** system defaults the date range from Jan 15, 2026 to today
+
+#### Scenario: Health page with custom dates
+- **WHEN** user selects a custom date range in the UI
+- **THEN** the URL updates with `start_date` and `end_date` parameters
+- **THEN** all health components recalculate based on this specific range
+
 ### Requirement: System analyzes weekday vs weekend spending
-The system SHALL compare spending patterns between weekdays and weekends.
+The system SHALL compare spending patterns between weekdays and weekends within the specified date range.
 
 #### Scenario: Weekday spending average
 - **WHEN** user views spending patterns
