@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,10 +16,10 @@ spec:
       labels:
         app: glance
         app.kubernetes.io/name: glance
-        netpol.cilium.io/egress-to-kube-dns: "true"
-        netpol.cilium.io/egress-to-world: "true"
-        netpol.cilium.io/ingress-from-ingress: "true"
-        netpol.cilium.io/ingress-from-prometheus: "true"
+        # netpol.cilium.io/egress-to-kube-dns: "true"
+        # netpol.cilium.io/egress-to-world: "true"
+        # netpol.cilium.io/ingress-from-ingress: "true"
+        # netpol.cilium.io/ingress-from-prometheus: "true"
     spec:
       containers:
         - name: glance
