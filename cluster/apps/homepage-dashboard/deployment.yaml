@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -13,10 +14,10 @@ spec:
     metadata:
       labels:
         app: homepage-dashboard
-        netpol.cilium.io/egress-to-kube-dns: "true"
-        netpol.cilium.io/egress-to-world: "true"
-        netpol.cilium.io/ingress-from-ingress: "true"
-        netpol.cilium.io/ingress-from-prometheus: "true"
+        # netpol.cilium.io/egress-to-kube-dns: "true"
+        # netpol.cilium.io/egress-to-world: "true"
+        # netpol.cilium.io/ingress-from-ingress: "true"
+        # netpol.cilium.io/ingress-from-prometheus: "true"
     spec:
       securityContext:
         runAsNonRoot: true
@@ -24,38 +25,38 @@ spec:
         runAsGroup: 1000
         fsGroup: 1000
       initContainers:
-      - name: init-config
-        image: busybox:latest
-        command: ['sh', '-c', 'cp /config-source/* /app/config/']
-        volumeMounts:
-        - name: config-source
-          mountPath: /config-source
-        - name: config
-          mountPath: /app/config
+        - name: init-config
+          image: busybox:latest
+          command: ['sh', '-c', 'cp /config-source/* /app/config/']
+          volumeMounts:
+            - name: config-source
+              mountPath: /config-source
+            - name: config
+              mountPath: /app/config
       containers:
-      - name: homepage-dashboard
-        image: ghcr.io/benphelps/homepage:latest
-        ports:
-        - containerPort: 3000
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          capabilities:
-            drop: [ "ALL" ]
-        volumeMounts:
-        - name: config
-          mountPath: /app/config
-        - name: logs
-          mountPath: /app/logs
-        - name: cache
-          mountPath: /app/public/icons
+        - name: homepage-dashboard
+          image: ghcr.io/benphelps/homepage:latest
+          ports:
+            - containerPort: 3000
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: config
+              mountPath: /app/config
+            - name: logs
+              mountPath: /app/logs
+            - name: cache
+              mountPath: /app/public/icons
       volumes:
-      - name: config-source
-        configMap:
-          name: homepage-config
-      - name: config
-        emptyDir: {}
-      - name: logs
-        emptyDir: {}
-      - name: cache
-        emptyDir: {}
+        - name: config-source
+          configMap:
+            name: homepage-config
+        - name: config
+          emptyDir: {}
+        - name: logs
+          emptyDir: {}
+        - name: cache
+          emptyDir: {}

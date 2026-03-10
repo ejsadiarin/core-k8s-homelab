@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -11,9 +12,9 @@ spec:
     metadata:
       labels:
         app: hello-world
-        netpol.cilium.io/egress-to-kube-dns: "true"
-        netpol.cilium.io/ingress-from-ingress: "true"
-        netpol.cilium.io/ingress-from-prometheus: "true"
+        # netpol.cilium.io/egress-to-kube-dns: "true"
+        # netpol.cilium.io/ingress-from-ingress: "true"
+        # netpol.cilium.io/ingress-from-prometheus: "true"
     spec:
       securityContext:
         runAsNonRoot: true
@@ -21,19 +22,20 @@ spec:
         runAsGroup: 1000
         fsGroup: 1000
       containers:
-      - name: echo-server
-        image: mendhak/http-https-echo
-        ports:
-        - containerPort: 8080
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          capabilities:
-            drop: ["ALL"]
-        volumeMounts:
-        - name: data
-          mountPath: /data
+        - name: echo-server
+          image: mendhak/http-https-echo
+          ports:
+            - containerPort: 8080
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: data
+              mountPath: /data
       volumes:
-      - name: data
-        persistentVolumeClaim:
-          claimName: hello-world-local
+        - name: data
+          persistentVolumeClaim:
+            claimName: hello-world-local
+

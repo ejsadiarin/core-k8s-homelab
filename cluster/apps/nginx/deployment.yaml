@@ -15,9 +15,9 @@ spec:
         app.kubernetes.io/name: nginx
         app.kubernetes.io/part-of: web-apps
         app.kubernetes.io/managed-by: argocd
-        netpol.cilium.io/egress-to-kube-dns: "true"
-        netpol.cilium.io/ingress-from-ingress: "true"
-        netpol.cilium.io/ingress-from-prometheus: "true"
+        # netpol.cilium.io/egress-to-kube-dns: "true"
+        # netpol.cilium.io/ingress-from-ingress: "true"
+        # netpol.cilium.io/ingress-from-prometheus: "true"
     spec:
       containers:
         - name: nginx

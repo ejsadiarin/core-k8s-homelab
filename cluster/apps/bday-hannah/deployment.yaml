@@ -15,9 +15,9 @@ spec:
     metadata:
       labels:
         app: bday-hannah
-        netpol.cilium.io/egress-to-kube-dns: "true"
-        netpol.cilium.io/ingress-from-ingress: "true"
-        netpol.cilium.io/ingress-from-prometheus: "true"
+        # netpol.cilium.io/egress-to-kube-dns: "true"
+        # netpol.cilium.io/ingress-from-ingress: "true"
+        # netpol.cilium.io/ingress-from-prometheus: "true"
     spec:
       imagePullSecrets:
         - name: ghcr-secret

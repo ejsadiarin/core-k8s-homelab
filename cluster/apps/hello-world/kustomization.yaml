@@ -1,13 +1,14 @@
+---
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-- deployment.yaml
-- service.yaml
-- http-route.yaml
-- namespace.yaml
-- pvc.yaml
-- ../../common/cilium-network-policies
+  - deployment.yaml
+  - service.yaml
+  - http-route.yaml
+  - namespace.yaml
+  - pvc.yaml
+# - ../../common/cilium-network-policies
 
 labels:
   - pairs:

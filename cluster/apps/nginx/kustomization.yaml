@@ -9,7 +9,7 @@ resources:
   - service.yaml
   - pvc.yaml
   - httproute.yaml
-  - ../../common/cilium-network-policies
+  # - ../../common/cilium-network-policies
 
 namespace: nginx
 
