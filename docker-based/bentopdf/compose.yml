@@ -1,0 +1,21 @@
+---
+services:
+  bentopdf:
+    container_name: bentopdf
+    image: ghcr.io/alam00000/bentopdf:latest
+    restart: unless-stopped
+    healthcheck:
+      disable: false
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bentopdf.rule=Host(`bentopdf.local.ejsadiarin.com`)"
+      - "traefik.http.routers.bentopdf.entrypoints=https"
+      - "traefik.http.routers.bentopdf.tls=true"
+      # BentoPDF listens on 8080 internally by default
+      - "traefik.http.services.bentopdf.loadbalancer.server.port=8080"
+
+networks:
+  proxy:
+    external: true
