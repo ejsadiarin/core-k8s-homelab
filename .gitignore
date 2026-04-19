@@ -33,3 +33,4 @@ values-local.yml
 charts/
 
 */**/bin/
+.worktrees/
